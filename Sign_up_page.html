@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCore - Sign Up</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#39FF14',
+                        secondary: '#1A1A1A'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style1.css">
+</head>
+
+<body>
+    <header class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-blur-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="FitCore.html" class="text-primary font-['Pacifico'] text-3xl">FitCore</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="FitCore.html" class="text-white hover:text-primary">Home</a>
+                    <a href="FitCore.html#features" class="text-white hover:text-primary">Features</a>
+                    <a href="FitCore.html#membership" class="text-white hover:text-primary">Membership</a>
+                    <a href="FitCore.html#trainers" class="text-white hover:text-primary">Trainers</a>
+                    <a href="FitCore.html#testimonials" class="text-white hover:text-primary">Testimonials</a>
+                    <a href="FitCore.html#contact" class="text-white hover:text-primary">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="signup-container min-h-screen pt-24 pb-16">
+        <div class="overlay min-h-screen pt-24 pb-16">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4">Create Your <span
+                                class="text-primary">Account</span></h1>
+                        <p class="text-xl text-gray-300">Join the FitCore community and start your fitness journey today
+                        </p>
+                    </div>
+                    <div class="bg-black bg-opacity-80 backdrop-blur-md rounded-lg p-8 shadow-lg">
+                        
+                        <form id="signupForm" class="space-y-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                                    <input type="text" id="fullName"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                        required placeholder="John">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+                                    <input type="number" id="phoneNumber"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                        required placeholder="+91 123456789">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                                    <input type="email" id="email"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                        required placeholder="john@gmail.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Role</label>
+                                    <div class="relative">
+                                        <button type="button" id="roleDropdown"
+                                            class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm text-left flex justify-between items-center">
+                                            <span id="selectedRole">MEMBER</span>
+                                            <i class="ri-arrow-down-s-line"></i>
+                                        </button>
+                                        <div id="roleOptions"
+                                            class="absolute w-full mt-1 bg-gray-800 rounded shadow-lg hidden z-10">
+                                            <div class="p-2">
+                                                <div class="cursor-pointer hover:bg-gray-700 p-2 rounded"
+                                                    data-role="MEMBER">MEMBER</div>
+                                                <div class="cursor-pointer hover:bg-gray-700 p-2 rounded"
+                                                    data-role="ADMIN">ADMIN</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="adminCodeContainer" class="hidden relative">
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Admin Code</label>
+                                    <input type="password" id="adminCode"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm">
+                                    <button type="button" id="toggleAdminCode"
+                                        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Password Field with Toggle -->
+                                <div class="relative">
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                                    <input type="password" id="password"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                        required>
+                                    <button type="button" id="togglePassword"
+                                        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Confirm Password Field with Toggle -->
+                                <div class="relative">
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+                                    <input type="password" id="confirmPassword"
+                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                        required>
+                                    <button type="button" id="toggleConfirmPassword"
+                                        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
+                                        <i class="ri-eye-line"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="flex items-start">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" required>
+                                    <span class="checkmark mr-3"></span>
+                                    <span class="text-sm text-gray-300">I agree to the <a href="#"
+                                            class="text-primary hover:underline">Terms of Service</a> and <a href="#"
+                                            class="text-primary hover:underline">Privacy Policy</a>.</span>
+                                </label>
+                            </div>
+                            <div>
+                                <button type="submit"
+                                    class="w-full bg-primary text-black py-4 !rounded-button font-bold text-lg hover:bg-opacity-80 transition-colors whitespace-nowrap">Create
+                                    Account</button>
+                                <p class="text-center mt-4 text-gray-400">Already have an account? <a
+                                        href="sign_in.html" class="text-primary hover:underline">Log in</a></p>
+                            </div>
+
+                            <!-- Social Login Divider and Buttons -->
+<div class="text-center mb-8">
+    <div class="flex items-center justify-center mb-6">
+        <div class="w-full h-px bg-gray-700"></div>
+        <span class="mx-4 text-gray-400 text-sm whitespace-nowrap">Log in with</span>
+        <div class="w-full h-px bg-gray-700"></div>
+    </div>
+    <div class="flex justify-center gap-4">
+        <button class="border border-gray-600 rounded-lg px-6 py-3 hover:bg-gray-800 transition">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" class="h-5 w-5">
+        </button>
+        <button class="border border-gray-600 rounded-lg px-6 py-3 hover:bg-gray-800 transition">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook" class="h-5 w-5">
+        </button>
+        <button class="border border-gray-600 rounded-lg px-6 py-3 hover:bg-gray-800 transition">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/640px-Apple_logo_white.svg.png" alt="Apple" class="h-5 w-5">
+        </button>
+    </div>
+</div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Collect form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim(); // 👈 (if you have confirm password field)
+            const role = document.getElementById('selectedRole').textContent;
+            const adminCode = document.getElementById('adminCode').value.trim();
+
+            // Simple front-end validations 🔥
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match.', 'error');
+                return;
+            }
+
+            if (role === 'ADMIN' && adminCode !== 'FITCORE2025') {
+                showNotification('Invalid Admin Code.', 'error');
+                return;
+            }
+
+            const signupData = { fullName, phone, email, password, role, adminCode };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(signupData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification(result.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'sign_in.html';
+                    }, 2000);
+                } else {
+                    showNotification(+ (result.message || 'Signup failed.'), 'error');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Server Error: Please try again later.', 'error');
+            }
+        });
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded shadow-lg z-50 ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        const roleDropdown = document.getElementById('roleDropdown');
+        const roleOptions = document.getElementById('roleOptions');
+        const selectedRole = document.getElementById('selectedRole');
+        const adminCodeContainer = document.getElementById('adminCodeContainer');
+
+        // Open/close dropdown
+        roleDropdown.addEventListener('click', () => {
+            roleOptions.classList.toggle('hidden');
+        });
+
+        // Select a role
+        roleOptions.querySelectorAll('[data-role]').forEach(option => {
+            option.addEventListener('click', () => {
+                const role = option.getAttribute('data-role');
+                selectedRole.textContent = role;
+                roleOptions.classList.add('hidden');
+
+                // Show admin code field if role is ADMIN
+                if (role === 'ADMIN') {
+                    adminCodeContainer.classList.remove('hidden');
+                } else {
+                    adminCodeContainer.classList.add('hidden');
+                }
+            });
+        });
+
+        // Close dropdown if clicking outside
+        document.addEventListener('click', (event) => {
+            if (!roleDropdown.contains(event.target) && !roleOptions.contains(event.target)) {
+                roleOptions.classList.add('hidden');
+            }
+        });
+
+        // password eye toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            togglePassword.innerHTML = type === 'password'
+                ? '<i class="ri-eye-line"></i>'
+                : '<i class="ri-eye-off-line"></i>';
+        });
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+
+            toggleConfirmPassword.innerHTML = type === 'password'
+                ? '<i class="ri-eye-line"></i>'
+                : '<i class="ri-eye-off-line"></i>';
+        });
+
+        // Admin Code eye toggle 
+        const toggleAdminCode = document.getElementById('toggleAdminCode');
+        const adminCodeInput = document.getElementById('adminCode');
+
+        toggleAdminCode.addEventListener('click', () => {
+            const type = adminCodeInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            adminCodeInput.setAttribute('type', type);
+
+            toggleAdminCode.innerHTML = type === 'password'
+                ? '<i class="ri-eye-line"></i>'
+                : '<i class="ri-eye-off-line"></i>';
+        });
+
+    </script>
+
+
+</body>
+
+</html>

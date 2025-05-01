@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>FitCore - Login</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#39FF14',
+                        secondary: '#1A1A1A'
+                    },
+                    borderRadius: {
+                        'button': '8px'
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .login-container {
+            background-image: url("/images/background2.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .overlay {
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.85) 50%, rgba(0, 0, 0, 0.7) 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <main class="login-container min-h-screen flex items-center justify-center">
+        <div class="overlay w-full h-full absolute top-0 left-0 z-0"></div>
+        <div class="relative z-10 w-full max-w-md p-8 bg-black bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-6">Welcome Back to <span class="text-primary">FitCore</span>
+            </h2>
+            <form id="loginForm" class="space-y-6">
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                    <input type="email"
+                        class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary outline-none text-sm"
+                        required placeholder="john@gmail.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword"
+                            class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary outline-none text-sm"
+                            required placeholder="password">
+                        <button type="button" id="toggleLoginPassword"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                  <!-- Role selection -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Login as:</label>
+                    <select id="role" name="role"
+                        class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary outline-none text-sm"
+                        onchange="toggleAdminCode()" required>
+                        <option value="member">Member</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <!-- Admin code input (hidden by default) -->
+                <div id="adminCodeContainer" style="display: none;">
+                    <label class="block text-sm font-medium text-gray-300 mb-2" for="adminCode">Admin Code</label>
+                    <input type="text" id="adminCode" name="adminCode"
+                        class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary outline-none text-sm"
+                        placeholder="Enter Admin Code">
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit"
+                    class="w-full bg-primary text-black py-3 rounded-button font-bold text-lg hover:bg-opacity-80 transition">Log
+                    In</button>
+                <p class="text-center text-gray-400">Don’t have an account? <a href="Sign_up_page.html"
+                        class="text-primary hover:underline">Sign up</a></p>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('toggleLoginPassword').addEventListener('click', function () {
+            const input = document.getElementById('loginPassword');
+            const type = input.type === 'password' ? 'text' : 'password';
+            input.type = type;
+            this.innerHTML = type === 'password' ? '<i class="ri-eye-off-line"></i>' : '<i class="ri-eye-line"></i>';
+        });
+
+        // Toggle admin code field
+        function toggleAdminCode() {
+            const role = document.getElementById("role").value;
+            const adminField = document.getElementById("adminCodeContainer");
+            adminField.style.display = role === "admin" ? "block" : "none";
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.querySelector('input[type="email"]').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const role = document.getElementById('role').value;
+            const adminCode = role === 'admin' ? document.getElementById('adminCode').value.trim() : null;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role, adminCode })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification("Login successful! Redirecting...", "success");
+
+                    setTimeout(() => {
+                        if (result.role === 'ADMIN') {
+                            window.location.href = "adminD.html";
+                        } else {
+                            window.location.href = "memberD.html";
+                        }
+                    }, 1500);
+                } else {
+                    showNotification((result.message || "Login failed."), "error");
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification("Server error, please try again later.", "error");
+            }
+        });
+
+        function showNotification(message, type) {
+            const notification = document.createElement("div");
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded shadow-lg z-50 ${type === "error" ? "bg-red-500" : "bg-green-500"} text-white`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+    </script>
+</body>
+
+</html>

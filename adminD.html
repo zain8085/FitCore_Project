@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitCore - Admin Dashboard</title>
+  <link rel="stylesheet" href="style1.css">
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+
+    header {
+      background-color: #000;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #39FF14;
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    section {
+      background-color: #1c1c1c;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+    }
+
+    h2 {
+      color: #39FF14;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .btn {
+      margin-top: 1rem;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #39FF14;
+      color: #000;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1 style="color:white">FitCore Admin</h1>
+    <nav>
+      <a href="FitCore.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Member Management</h2>
+      <ul>
+        <li>View/Add/Edit/Delete Members</li>
+        <li>Search by Name, ID, or Phone</li>
+        <li>Assign Trainers/Plans</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Trainer Management</h2>
+      <ul>
+        <li>Add/Edit Trainers</li>
+        <li>Assign Trainers to Members</li>
+        <li>Manage Availability</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Plan Management</h2>
+      <ul>
+        <li>Create/Edit/Delete Workout & Diet Plans</li>
+        <li>Link Plans to Goals</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Billing & Finance</h2>
+      <ul>
+        <li>Add/View Payments</li>
+        <li>Generate Invoices</li>
+        <li>Track Due Payments</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Attendance Reports</h2>
+      <ul>
+        <li>Member-wise Attendance</li>
+        <li>Date-wise Class Reports</li>
+        <li>Export to Excel</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Announcements</h2>
+      <ul>
+        <li>Send Updates to Members</li>
+        <li>Class Timing Changes</li>
+        <li>Event Reminders</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Inventory</h2>
+      <ul>
+        <li>Manage Supplement Stock</li>
+        <li>Low Stock Alerts</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Admin Settings</h2>
+      <ul>
+        <li>Change Password</li>
+        <li>Manage Roles</li>
+        <li>Customize Dashboard</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Admin Welcome Message
+    alert("Welcome Admin! You have full access to manage FitCore.");
+
+    // Section interactions
+    const sections = document.querySelectorAll("section");
+
+    sections.forEach((section) => {
+        section.addEventListener("click", () => {
+            const title = section.querySelector("h2").textContent;
+            alert(`Opening ${title} module...\n\n(This will redirect or load tools soon)`);
+        });
+    });
+
+    // Example feature prompts (these can later be replaced with modals/forms/API calls)
+    function placeholderAction(feature) {
+        alert(`"${feature}" functionality is under development.`);
+    }
+});
+
+  </script>
+</body>
+
+</html>

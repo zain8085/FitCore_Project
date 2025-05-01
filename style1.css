@@ -1,0 +1,250 @@
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.4) 100%);
+        }
+
+        .neon-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+        }
+
+        .neon-button:hover {
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(57, 255, 20, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(57, 255, 20, 0.1);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+        }
+
+        .membership-card {
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .membership-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .popular-plan {
+            position: relative;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+        }
+
+        .popular-plan::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #39FF14;
+            color: #000;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+/* Sign-up page */
+
+:where([class^="ri-"])::before {
+    content: "\f3c2";
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.signup-container {
+    background-image: url('https://readdy.ai/api/search-image?query=modern%2520gym%2520interior%2520with%2520weights%2520and%2520equipment%2520in%2520dark%2520atmosphere%2520with%2520neon%2520green%2520accent%2520lighting%252C%2520professional%2520photography%2520with%2520dramatic%2520lighting%252C%2520wide%2520angle%2520shot%2520showing%2520spacious%2520training%2520area%252C%2520blurred%2520background%2520perfect%2520for%2520text%2520overlay&width=1920&height=1080&seq=11&orientation=landscape');
+    background-size: cover;
+    background-position: center;
+}
+
+.overlay {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.85) 50%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.membership-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.membership-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.popular-plan {
+    position: relative;
+    border: 1px solid rgba(57, 255, 20, 0.3);
+}
+
+.popular-plan::before {
+    content: "MOST POPULAR";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #39FF14;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+}
+
+.custom-checkbox:hover input~.checkmark {
+    background-color: #333;
+}
+
+.custom-checkbox input:checked~.checkmark {
+    background-color: #39FF14;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked~.checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 12px;
+    border: solid #000;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.custom-radio {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-checkmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #2a2a2a;
+    border-radius: 50%;
+}
+
+.custom-radio:hover input~.radio-checkmark {
+    background-color: #333;
+}
+
+.custom-radio input:checked~.radio-checkmark {
+    background-color: #39FF14;
+}
+
+.radio-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-radio input:checked~.radio-checkmark:after {
+    display: block;
+}
+
+.custom-radio .radio-checkmark:after {
+    top: 7px;
+    left: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #000;
+}
