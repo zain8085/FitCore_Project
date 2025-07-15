@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bills - Gym Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+<body class="bg-black text-white font-['Inter']">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold">Bills</h1>
+    <table class="w-full text-left mt-4">
+      <thead>
+        <tr>
+          <th class="py-2">Month</th>
+          <th class="py-2">Amount</th>
+          <th class="py-2">Invoice</th>
+        </tr>
+      </thead>
+      <tbody id="bills-table">
+        <!-- Bill records will be dynamically loaded here -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    // Fetch and display bill records
+    async function loadBills() {
+      const userId = 'CURRENT_USER_ID'; // Replace with actual user ID
+      const res = await fetch(`/api/member/bills/${userId}`);
+      const data = await res.json();
+      const table = document.getElementById('bills-table');
+      table.innerHTML = '';
+      data.forEach(b => {
+        table.innerHTML += `<tr><td class='py-1'>${b.month}</td><td class='py-1'>₹${b.amount}</td><td class='py-1'><a href='${b.invoiceUrl}' class='text-blue-400 underline' target='_blank'>View</a></td></tr>`;
+      });
+    }
+    loadBills();
+  </script>
+</body>
+</html>

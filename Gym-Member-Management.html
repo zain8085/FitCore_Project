@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Management - Fitness Management System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#00FF00', secondary: '#10b981' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #00FF00;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #00FF00;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #333333;
+            border-radius: 4px;
+            background-color: #222222;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #00FF00;
+            border-color: #00FF00;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300FF00'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .status-active {
+            background-color: rgba(0, 255, 0, 0.2);
+            color: #00FF00;
+        }
+
+        .status-inactive {
+            background-color: rgba(128, 128, 128, 0.2);
+            color: #CCCCCC;
+        }
+
+        .status-expired {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #FF5555;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-black shadow-lg hidden md:block border-r border-gray-800">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-['Pacifico'] text-primary">FitCore</span>
+                        <!-- <span class="ml-2 text-sm font-semibold text-white">Admin Panel</span> -->
+                    </div>
+                </div>
+                <nav class="flex-1 overflow-y-auto py-4">
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="Admin-and-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-dashboard-line"></i>
+                                </div>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Gym-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary bg-opacity-20 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-primary">
+                                    <i class="ri-user-line"></i>
+                                </div>
+                                <span>Member Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Billing-Management-Dashboard.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-bill-line"></i>
+                                </div>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Fee-Packages-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-price-tag-3-line"></i>
+                                </div>
+                                <span>Fee Packages</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Report-Export.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-file-chart-line"></i>
+                                </div>
+                                <span>Report Export</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Supplement-Store-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-store-line"></i>
+                                </div>
+                                <span>Supplement Store</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+                <div class="p-4 border-t border-gray-800">
+                    <button
+                        class="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-300 bg-gray-900 hover:bg-gray-800 rounded-lg !rounded-button">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                            <i class="ri-logout-box-line"></i>
+                        </div>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-black shadow-md z-10 border-b border-gray-800">
+                <div class="px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center md:hidden">
+                            <button type="button" class="text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-menu-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                            <div class="max-w-lg w-full lg:max-w-xs">
+                                <label for="search" class="sr-only">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+                                            <i class="ri-search-line"></i>
+                                        </div>
+                                    </div>
+                                    <input id="search" name="search"
+                                        class="block w-full pl-10 pr-3 py-2 border-none rounded-lg text-sm placeholder-gray-500 bg-gray-900 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                                        placeholder="Search members, ID, email..." type="search">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <button type="button"
+                                class="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-notification-3-line"></i>
+                                </div>
+                            </button>
+
+                            <!-- Open User Menu  -->
+                            <div class="ml-3 relative">
+                                <div>
+                                    <button type="button"
+                                        class="max-w-xs flex items-center text-sm rounded-full focus:outline-none"
+                                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                        <span class="sr-only">Open user menu</span>
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300">
+                                            <i class="ri-user-line"></i>
+                                        </div>
+                                    </button>
+                                </div>
+
+                                <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
+                                    tabindex="-1" id="user-dropdown-menu">
+                                    <a href="AdminProfile.html"
+                                        class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600" role="menuitem"
+                                        tabindex="-1" id="user-menu-item-0">My Profile</a>
+                                    <a href="sign_in.html"
+                                        class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600" role="menuitem"
+                                        tabindex="-1" id="user-menu-item-3">Sign out</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto bg-black p-4 sm:p-6 lg:p-8">
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-white">Member Management</h1>
+                        <p class="mt-1 text-sm text-gray-400">Manage your gym members, view details and track
+                            memberships</p>
+                    </div>
+                    <!-- <div class="mt-4 sm:mt-0">
+                        <button
+                            class="px-4 py-2 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-black !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                    <i class="ri-user-add-line"></i>
+                                </div>
+                                <span>Add New Member</span>
+                            </div>
+                        </button>
+                    </div> -->
+                </div>
+
+                <!-- Filter Section -->
+                <div class="bg-gray-900 rounded-lg shadow-lg mb-6 p-4">
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <div class="relative flex-1">
+                            <label for="membership-type" class="block text-sm font-medium text-gray-400 mb-1">Membership
+                                Type</label>
+                            <select id="membership-type"
+                                class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                <option value="All">All Memberships</option>
+                                <!-- Use "All" as value, not empty string -->
+                                <option value="Basic Monthly">Basic Monthly</option> <!-- ⭐ NEW/FIXED ⭐ -->
+                                <option value="Standard Monthly">Standard Monthly</option> <!-- ⭐ FIXED ⭐ -->
+                                <option value="Premium Annual">Premium Annual</option> <!-- ⭐ FIXED ⭐ -->
+                                <!-- ⭐ FIXED (if you have this plan) ⭐ -->
+                            </select>
+                        </div>
+                        <div class="relative flex-1">
+                            <label for="status" class="block text-sm font-medium text-gray-400 mb-1">Status</label>
+                            <select id="status"
+                                class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                <option value="All">All Status</option> <!-- Use "All" as value, not empty string -->
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Expired">Expired</option>
+                            </select>
+                        </div>
+                        <div class="relative flex-1">
+                            <label for="join-date" class="block text-sm font-medium text-gray-400 mb-1">Join
+                                Date</label>
+                            <select id="join-date"
+                                class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                <option value="">All Time</option>
+                                <option value="last-week">Last Week</option>
+                                <option value="last-month">Last Month</option>
+                                <option value="last-3-months">Last 3 Months</option>
+                                <option value="last-year">Last Year</option>
+                            </select>
+                        </div>
+                        <div class="sm:self-end">
+                            <button
+                                class="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-filter-line"></i>
+                                    </div>
+                                    <span>Apply Filters</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Filters -->
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary bg-opacity-20 text-primary">
+                            <span>Premium</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary bg-opacity-20 text-primary">
+                            <span>Active</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar (Search, Export, Print, Bulk Actions) -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <div class="flex space-x-2 mt-4 sm:mt-0">
+                        <!-- <button id="exportButton"
+                            class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                    <i class="ri-download-line"></i>
+                                </div>
+                                <span>Export</span>
+                            </div>
+                        </button>
+                        <button id="printButton"
+                            class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                    <i class="ri-printer-line"></i>
+                                </div>
+                                <span>Print</span>
+                            </div>
+                        </button> -->
+                        <div class="relative">
+                            <button id="bulkActionsDropdownBtn"
+                                class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span>Bulk Actions</span>
+                                    <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            <!-- ⭐ Bulk Actions Dropdown Content ⭐ -->
+                            <div id="bulkActionsDropdownContent"
+                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 hidden">
+                                <div class="py-1">
+                                    <button id="bulkDeleteBtn"
+                                        class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        Delete Selected
+                                    </button>
+                                    <!-- Add other bulk actions here if needed later -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Table -->
+                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-800">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-2">
+                                            <span>Member</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>ID</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-up-s-line text-primary"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Membership</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Join Date</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Status</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody" class="divide-y divide-gray-800">
+                                <!-- <tr class="bg-gray-900 hover:bg-gray-800">  -------- |Made changes in this table  -->
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-400">Loading members...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <!-- Pagination Controls - Add this HTML snippet in your Gym-Member-Management.html -->
+                    <div class="mt-4 flex justify-between items-center text-gray-400">
+                        <div>
+                            <span id="paginationInfo"></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="prevPageBtn"
+                                class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Previous
+                            </button>
+                            <div id="pageNumbers" class="flex space-x-1">
+                                <!-- Page numbers will be dynamically inserted here -->
+                            </div>
+                            <button id="nextPageBtn"
+                                class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="viewMemberModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md border border-gray-700">
+            <h3 class="text-2xl font-semibold text-white mb-6">Member Details</h3>
+            <div class="space-y-4 text-gray-300">
+                <p><strong>Full Name:</strong> <span id="viewFullName"></span></p>
+                <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+                <p><strong>Phone:</strong> <span id="viewPhone"></span></p>
+                <p><strong>Address:</strong> <span id="viewAddress"></span></p>
+                <p><strong>Member ID:</strong> <span id="viewMemberId"></span></p>
+                <p><strong>Role:</strong> <span id="viewRole"></span></p>
+                <p><strong>Membership Plan:</strong> <span id="viewMembershipPlan"></span></p>
+                <p><strong>Membership Status:</strong> <span id="viewMembershipStatus"></span></p>
+                <p><strong>Joined Date:</strong> <span id="viewJoinedDate"></span></p>
+                <p><strong>Membership Expires:</strong> <span id="viewMembershipExpiresAt"></span></p>
+                <p><strong>Last Login:</strong> <span id="viewLastLogin"></span></p>
+            </div>
+            <div class="mt-8 text-right">
+                <button id="closeViewModalBtn"
+                    class="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 !rounded-button">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editMemberModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-lg border border-gray-700">
+            <h3 class="text-2xl font-semibold text-white mb-6">Edit Member</h3>
+            <form id="editMemberForm" class="space-y-4">
+                <input type="hidden" id="editMemberIdHidden">
+                <div>
+                    <label for="editMemberFullName" class="block text-sm font-medium text-gray-300">Full Name</label>
+                    <input type="text" id="editMemberFullName" name="fullName"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                </div>
+                <div>
+                    <label for="editMemberEmail" class="block text-sm font-medium text-gray-300">Email</label>
+                    <input type="email" id="editMemberEmail" name="email"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                </div>
+                <div>
+                    <label for="editMemberPhone" class="block text-sm font-medium text-gray-300">Phone</label>
+                    <input type="text" id="editMemberPhone" name="phone"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                </div>
+                <div>
+                    <label for="editMemberAddress" class="block text-sm font-medium text-gray-300">Address</label>
+                    <textarea id="editMemberAddress" name="address" rows="3"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"></textarea>
+                </div>
+                <div>
+                    <label for="editMemberRole" class="block text-sm font-medium text-gray-300">Role</label>
+                    <select id="editMemberRole" name="role"
+                        class="custom-select mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="MEMBER">MEMBER</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editMemberMembershipPlan" class="block text-sm font-medium text-gray-300">Membership
+                        Plan</label>
+                    <input type="text" id="editMemberMembershipPlan" name="membershipPlan"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                </div>
+                <div>
+                    <label for="editMemberMembershipStatus" class="block text-sm font-medium text-gray-300">Membership
+                        Status</label>
+                    <select id="editMemberMembershipStatus" name="membershipStatus"
+                        class="custom-select mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Expired">Expired</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editMemberMembershipExpiresAt"
+                        class="block text-sm font-medium text-gray-300">Membership Expires At</label>
+                    <input type="date" id="editMemberMembershipExpiresAt" name="membershipExpiresAt"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="cancelEditMemberModalBtn"
+                        class="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 !rounded-button">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-3 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-black !rounded-button">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        // ⭐ DOM elements for modals ⭐
+        const viewMemberModal = document.getElementById('viewMemberModal');
+        const closeViewModalBtn = document.getElementById('closeViewModalBtn');
+        const editMemberModal = document.getElementById('editMemberModal');
+        const cancelEditMemberModalBtn = document.getElementById('cancelEditMemberModalBtn');
+        const editMemberForm = document.getElementById('editMemberForm');
+
+        // ⭐ Input fields for edit modal ⭐
+        const editMemberIdHidden = document.getElementById('editMemberIdHidden');
+        const editMemberFullName = document.getElementById('editMemberFullName');
+        const editMemberEmail = document.getElementById('editMemberEmail');
+        const editMemberPhone = document.getElementById('editMemberPhone');
+        const editMemberAddress = document.getElementById('editMemberAddress');
+        const editMemberRole = document.getElementById('editMemberRole');
+        const editMemberMembershipPlan = document.getElementById('editMemberMembershipPlan');
+        const editMemberMembershipStatus = document.getElementById('editMemberMembershipStatus');
+        const editMemberMembershipExpiresAt = document.getElementById('editMemberMembershipExpiresAt');
+
+        // ⭐ Pagination variables ⭐
+        let currentPage = 1;
+        const membersPerPage = 10;
+
+        // ⭐ NEW: Get pagination buttons once at the start ⭐
+        const paginationInfoSpan = document.getElementById('paginationInfo');
+        const pageNumbersDiv = document.getElementById('pageNumbers');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn'); // Get the actual button here
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainCheckbox = document.querySelector('thead input[type="checkbox"]');
+            const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+            if (mainCheckbox) {
+                mainCheckbox.addEventListener('change', function () {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.checked = mainCheckbox.checked;
+                    });
+                });
+            }
+
+            const filterTags = document.querySelectorAll('.inline-flex.rounded-full button');
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function () {
+                    this.parentElement.remove();
+                    // ⭐ Re-fetch members after removing a filter tag (if applicable) ⭐
+                    applyFiltersAndFetch();
+                });
+            });
+
+            const searchInput = document.getElementById('search'); // Assuming you have a search input with ID 'search'
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function (e) {
+                    if (e.key === 'Enter') {
+                        console.log('Searching for:', searchInput.value);
+                        currentPage = 1; // Reset to first page on new search
+                        applyFiltersAndFetch(); // Fetch with new search
+                    }
+                });
+            }
+
+            const menuButton = document.querySelector('.md\\:hidden button');
+            if (menuButton) {
+                menuButton.addEventListener('click', function () {
+                    const sidebar = document.querySelector('aside');
+                    sidebar.classList.toggle('hidden');
+                    sidebar.classList.toggle('md:block');
+                });
+            }
+
+            // ⭐ NEW: Filter dropdown elements (IDs adjusted to match your HTML) ⭐
+            const membershipTypeFilter = document.getElementById('membership-type'); // Corrected ID
+            const statusFilter = document.getElementById('status');                 // Corrected ID
+            const joinDateFilter = document.getElementById('join-date');           // Corrected ID (single select)
+
+            // ⭐ NEW: Event listeners for filter dropdowns ⭐
+            if (membershipTypeFilter) {
+                membershipTypeFilter.addEventListener('change', () => {
+                    currentPage = 1; // Reset to first page when filter changes
+                    applyFiltersAndFetch();
+                });
+            }
+            if (statusFilter) {
+                statusFilter.addEventListener('change', () => {
+                    currentPage = 1; // Reset to first page when filter changes
+                    applyFiltersAndFetch();
+                });
+            }
+            if (joinDateFilter) { // Changed to single joinDateFilter
+                joinDateFilter.addEventListener('change', () => {
+                    currentPage = 1; // Reset to first page when filter changes
+                    applyFiltersAndFetch();
+                });
+            }
+
+            // ⭐ Initial fetch and display of members (now uses applyFiltersAndFetch) ⭐
+            applyFiltersAndFetch();
+
+            // ⭐ Event Listeners for Modals (Close/Cancel buttons) ⭐
+            if (closeViewModalBtn) {
+                closeViewModalBtn.addEventListener('click', () => {
+                    viewMemberModal.classList.add('hidden');
+                });
+            }
+            if (cancelEditMemberModalBtn) {
+                cancelEditMemberModalBtn.addEventListener('click', () => {
+                    editMemberModal.classList.add('hidden');
+                });
+            }
+
+            // ⭐ Edit Member Form Submission Handler ⭐
+            if (editMemberForm) {
+                editMemberForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const memberObjectId = editMemberIdHidden.value;
+                    const token = localStorage.getItem("token");
+
+                    if (!token || !memberObjectId) {
+                        alert("Authentication token or member ID missing. Please log in.");
+                        window.location.href = "sign_in_page.html";
+                        return;
+                    }
+
+                    const updatedData = {
+                        fullName: editMemberFullName.value.trim(),
+                        email: editMemberEmail.value.trim(),
+                        phone: editMemberPhone.value.trim(),
+                        address: editMemberAddress.value.trim(),
+                        role: editMemberRole.value,
+                        membershipPlan: editMemberMembershipPlan.value.trim(),
+                        membershipStatus: editMemberMembershipStatus.value,
+                        membershipExpiresAt: editMemberMembershipExpiresAt.value
+                    };
+
+                    try {
+                        const response = await fetch(`http://localhost:5000/api/admin/members/${memberObjectId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-auth-token": token
+                            },
+                            body: JSON.stringify(updatedData)
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            alert(result.message || "Member updated successfully!");
+                            editMemberModal.classList.add('hidden');
+                            applyFiltersAndFetch(); // Re-fetch current view after edit
+                        } else {
+                            console.error("Failed to update member:", result.message);
+                            alert(`Failed to update member: ${result.message || 'Unknown error'}`);
+                        }
+                    } catch (error) {
+                        console.error("Error updating member:", error);
+                        alert("Network error or server unreachable. Please try again.");
+                    }
+
+                });
+            }
+
+            // ⭐ Pagination button event listeners - Attach once here ⭐
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        applyFiltersAndFetch();
+                    }
+                });
+            }
+
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', () => {
+                    // The totalPages is determined in renderPaginationControls
+                    // So we need a way to know it here. It's better to manage
+                    // currentPage and totalPages within renderPaginationControls' scope
+                    // or pass totalPages to this listener if needed for a stricter check.
+                    // For now, let's assume `applyFiltersAndFetch` will handle boundaries.
+                    currentPage++;
+                    applyFiltersAndFetch();
+                });
+            }
+
+
+            // ⭐ Bulk Actions Dropdown Toggle (ADD THIS) ----> zain⭐
+            const bulkActionsDropdownBtn = document.getElementById('bulkActionsDropdownBtn');
+            const bulkActionsDropdownContent = document.getElementById('bulkActionsDropdownContent');
+
+            if (bulkActionsDropdownBtn && bulkActionsDropdownContent) {
+                bulkActionsDropdownBtn.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent document click from closing immediately
+                    bulkActionsDropdownContent.classList.toggle('hidden');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!bulkActionsDropdownBtn.contains(event.target) && !bulkActionsDropdownContent.contains(event.target)) {
+                        bulkActionsDropdownContent.classList.add('hidden');
+                    }
+                });
+            }
+
+            // ⭐ Bulk Delete Button Listener (ADD THIS) ⭐
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.addEventListener('click', handleBulkDelete);
+            }
+
+            // ⭐ User Dropdown Menu Toggle (MOVED TO CORRECT POSITION) ⭐
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+            if (userMenuButton && userDropdownMenu) {
+                userMenuButton.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent document click from immediately closing it
+                    userDropdownMenu.classList.toggle('hidden');
+                });
+
+                // Close the dropdown if a click occurs outside of it
+                document.addEventListener('click', (event) => {
+                    if (!userMenuButton.contains(event.target) && !userDropdownMenu.contains(event.target)) {
+                        userDropdownMenu.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.warn("User menu button or dropdown content not found for event listeners.");
+            }
+        });
+
+        // ⭐ NEW: Helper function to collect all current filter/search/pagination parameters and trigger fetch ⭐
+        function applyFiltersAndFetch() {
+            // Corrected IDs for filter elements
+            const membershipPlan = document.getElementById('membership-type').value;
+            const membershipStatus = document.getElementById('status').value;
+            const joinDateOption = document.getElementById('join-date').value; // Get selected value from join-date dropdown
+            const searchQuery = document.getElementById('search').value;
+
+            // Calculate joinDateStart and joinDateEnd based on joinDateOption
+            let joinDateStart = '';
+            let joinDateEnd = '';
+            const now = new Date();
+
+            switch (joinDateOption) {
+                case 'last-week':
+                    // Need to create a new Date object for start date calculation to avoid modifying 'now' for end date.
+                    const lastWeekStart = new Date();
+                    lastWeekStart.setDate(now.getDate() - 7);
+                    joinDateStart = lastWeekStart.toISOString().split('T')[0];
+                    joinDateEnd = new Date().toISOString().split('T')[0]; // Today
+                    break;
+                case 'last-month':
+                    const lastMonthStart = new Date();
+                    lastMonthStart.setMonth(now.getMonth() - 1);
+                    joinDateStart = lastMonthStart.toISOString().split('T')[0];
+                    joinDateEnd = new Date().toISOString().split('T')[0];
+                    break;
+                case 'last-3-months':
+                    const last3MonthsStart = new Date();
+                    last3MonthsStart.setMonth(now.getMonth() - 3);
+                    joinDateStart = last3MonthsStart.toISOString().split('T')[0];
+                    joinDateEnd = new Date().toISOString().split('T')[0];
+                    break;
+                case 'last-year':
+                    const lastYearStart = new Date();
+                    lastYearStart.setFullYear(now.getFullYear() - 1);
+                    joinDateStart = lastYearStart.toISOString().split('T')[0];
+                    joinDateEnd = new Date().toISOString().split('T')[0];
+                    break;
+                case 'All Time': // Default or no filter
+                default:
+                    joinDateStart = '';
+                    joinDateEnd = '';
+                    break;
+            }
+
+            fetchAndDisplayMembers(
+                currentPage,
+                membersPerPage,
+                searchQuery,
+                membershipPlan,
+                membershipStatus,
+                joinDateStart,
+                joinDateEnd
+            );
+        }
+
+
+        // ⭐ Main function to fetch and display members (now with filter parameters) ⭐
+        async function fetchAndDisplayMembers(page, limit, searchQuery, membershipPlan, membershipStatus, joinDateStart, joinDateEnd) {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("You are not logged in. Redirecting to login...");
+                localStorage.removeItem("token");
+                localStorage.removeItem("userRole");
+                window.location.href = "sign_in_page.html";
+                return;
+            }
+
+            const membersTableBody = document.getElementById("membersTableBody");
+            membersTableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-4 text-center text-gray-400">Loading members...</td></tr>`;
+
+            // Construct URL with all parameters
+            let url = `http://localhost:5000/api/admin/members?page=${page}&limit=${limit}`;
+
+            if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
+            // Ensure values are not empty strings or 'All' before appending
+            if (membershipPlan && membershipPlan !== 'All Memberships' && membershipPlan !== '') url += `&membershipPlan=${encodeURIComponent(membershipPlan)}`;
+            if (membershipStatus && membershipStatus !== 'All Status' && membershipStatus !== '') url += `&membershipStatus=${encodeURIComponent(membershipStatus)}`;
+            if (joinDateStart) url += `&joinDateStart=${encodeURIComponent(joinDateStart)}`;
+            if (joinDateEnd) url += `&joinDateEnd=${encodeURIComponent(joinDateEnd)}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-auth-token": token
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const members = data.members;
+                    const totalPages = data.totalPages;
+                    const totalMembers = data.totalMembers;
+                    const currentPageFromResponse = data.currentPage;
+
+                    console.log("Fetched members:", members);
+                    populateMembersTable(members);
+                    renderPaginationControls(currentPageFromResponse, totalPages, totalMembers, members.length);
+                } else {
+                    let errorData;
+                    let errorMessage = `Error: ${response.status} ${response.statusText}`;
+
+                    try {
+                        errorData = await response.json();
+                        if (errorData && errorData.message) {
+                            errorMessage = errorData.message;
+                        }
+                    } catch (jsonError) {
+                        const textError = await response.text();
+                        console.error("Backend error response is not JSON:", textError);
+                        errorMessage = `Server Error: ${response.status} ${response.statusText}. Response: "${textError.substring(0, 100)}..."`;
+                    }
+
+                    console.error("Failed to fetch members:", errorMessage);
+                    alert(`Failed to load members: ${errorMessage}. Please try again later.`);
+                    membersTableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-4 text-center text-red-400">Error loading members: ${errorMessage}</td></tr>`;
+
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("userRole");
+                        window.location.href = "sign_in_page.html";
+                    }
+                }
+            } catch (error) {
+                console.error("Network error fetching members:", error);
+                alert("Network error or server unreachable. Please ensure your backend is running.");
+                membersTableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-4 text-center text-red-400">Network error.</td></tr>`;
+            }
+        }
+
+        // ⭐ Function to populate the table with members (no change needed here) ⭐
+        function populateMembersTable(members) {
+            const membersTableBody = document.getElementById("membersTableBody");
+            membersTableBody.innerHTML = '';
+
+            if (members.length === 0) {
+                membersTableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">No members found.</td></tr>`;
+                return;
+            }
+
+            members.forEach(member => {
+                const row = document.createElement("tr");
+                row.classList.add('bg-gray-900', 'hover:bg-gray-800');
+
+                const joinDate = member.createdAt ? new Date(member.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+                const expiryDate = member.membershipExpiresAt ? new Date(member.membershipExpiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+                const lastLoginDate = member.lastLogin ? new Date(member.lastLogin).toLocaleString('en-US') : 'N/A';
+
+                let statusClass = 'bg-gray-700';
+                if (member.membershipStatus === 'Active') {
+                    statusClass = 'bg-green-600 text-white';
+                } else if (member.membershipStatus === 'Expired') {
+                    statusClass = 'bg-red-600 text-white';
+                } else if (member.membershipStatus === 'Pending') {
+                    statusClass = 'bg-yellow-600 text-white';
+                }
+
+                row.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+                <input type="checkbox" class="custom-checkbox mr-3" data-member-id="${member._id}">
+                <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-300">
+                        <i class="ri-user-line"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <div class="text-sm font-medium text-white">${member.fullName || 'N/A'}</div>
+                    <div class="text-sm text-gray-400">${member.email || 'N/A'}</div>
+                </div>
+            </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-300">${member.memberId || 'N/A'}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-white">${member.membershipPlan || 'None'}</div>
+            <div class="text-xs text-gray-400">Expires: ${expiryDate}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-300">${joinDate}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                ${member.membershipStatus || 'Inactive'}
+            </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <div class="flex justify-end space-x-2">
+                <button class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none view-member-btn" data-member-id="${member._id}">
+                    <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-eye-line"></i>
+                    </div>
+                </button>
+                <button class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none edit-member-btn" data-member-id="${member._id}">
+                    <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-edit-line"></i>
+                    </div>
+                </button>
+                <button class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none delete-member-btn" data-member-id="${member._id}">
+                    <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-delete-bin-line"></i>
+                    </div>
+                </button>
+            </div>
+        </td>`;
+                membersTableBody.appendChild(row);
+            });
+
+            attachMemberActionListeners();
+        }
+
+        // ⭐ Function to attach event listeners to View, Edit, Delete buttons ⭐
+        function attachMemberActionListeners() {
+            document.querySelectorAll('.view-member-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const memberObjectId = e.currentTarget.dataset.memberId;
+                    console.log('View member clicked, _id:', memberObjectId);
+                    fetchAndShowMemberDetails(memberObjectId);
+                });
+            });
+
+            document.querySelectorAll('.edit-member-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const memberObjectId = e.currentTarget.dataset.memberId;
+                    console.log('Edit member clicked, _id:', memberObjectId);
+                    fetchAndPopulateEditModal(memberObjectId);
+                });
+            });
+
+            document.querySelectorAll('.delete-member-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const memberObjectId = e.currentTarget.dataset.memberId;
+                    console.log('Delete member clicked, _id:', memberObjectId);
+                    confirmAndDeleteMember(memberObjectId);
+                });
+            });
+        }
+
+        // ⭐ Function to fetch and display member details in view modal ⭐
+        async function fetchAndShowMemberDetails(memberObjectId) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Authentication token missing. Please log in.");
+                window.location.href = "sign_in_page.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/members/${memberObjectId}`, {
+                    method: "GET",
+                    headers: { "x-auth-token": token }
+                });
+
+                if (response.ok) {
+                    const member = await response.json();
+                    document.getElementById('viewFullName').textContent = member.fullName || 'N/A';
+                    document.getElementById('viewEmail').textContent = member.email || 'N/A';
+                    document.getElementById('viewPhone').textContent = member.phone || 'N/A';
+                    document.getElementById('viewAddress').textContent = member.address || 'Not provided';
+                    document.getElementById('viewMemberId').textContent = member.memberId || 'N/A';
+                    document.getElementById('viewRole').textContent = member.role || 'N/A';
+                    document.getElementById('viewMembershipPlan').textContent = member.membershipPlan || 'None';
+                    document.getElementById('viewMembershipStatus').textContent = member.membershipStatus || 'Inactive';
+                    document.getElementById('viewJoinedDate').textContent = member.createdAt ? new Date(member.createdAt).toLocaleDateString() : 'N/A';
+                    document.getElementById('viewMembershipExpiresAt').textContent = member.membershipExpiresAt ? new Date(member.membershipExpiresAt).toLocaleDateString() : 'N/A';
+                    document.getElementById('viewLastLogin').textContent = member.lastLogin ? new Date(member.lastLogin).toLocaleString() : 'N/A';
+
+                    viewMemberModal.classList.remove('hidden');
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to fetch member details: ${errorData.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error("Error fetching member details:", error);
+                alert("Network error or server unreachable.");
+            }
+        }
+
+        // ⭐ Function to fetch member data and populate the edit modal ⭐
+        async function fetchAndPopulateEditModal(memberObjectId) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Authentication token missing. Please log in.");
+                window.location.href = "sign_in_page.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/members/${memberObjectId}`, {
+                    method: "GET",
+                    headers: { "x-auth-token": token }
+                });
+
+                if (response.ok) {
+                    const member = await response.json();
+                    editMemberIdHidden.value = memberObjectId;
+                    editMemberFullName.value = member.fullName || '';
+                    editMemberEmail.value = member.email || '';
+                    editMemberPhone.value = member.phone || '';
+                    editMemberAddress.value = member.address || '';
+                    editMemberRole.value = member.role || 'MEMBER';
+                    editMemberMembershipPlan.value = member.membershipPlan || '';
+                    editMemberMembershipStatus.value = member.membershipStatus || 'Inactive';
+
+                    if (member.membershipExpiresAt) {
+                        const date = new Date(member.membershipExpiresAt);
+                        editMemberMembershipExpiresAt.value = date.toISOString().split('T')[0];
+                    } else {
+                        editMemberMembershipExpiresAt.value = '';
+                    }
+
+                    editMemberModal.classList.remove('hidden');
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to fetch member for editing: ${errorData.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error("Error fetching member for editing:", error);
+                alert("Network error or server unreachable.");
+            }
+        }
+
+        // ⭐ Function to confirm and delete a member ⭐
+        async function confirmAndDeleteMember(memberObjectId) {
+            if (!confirm('Are you sure you want to delete this member? This action cannot be undone.')) {
+                return;
+            }
+
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Authentication token missing. Please log in.");
+                window.location.href = "sign_in_page.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/members/${memberObjectId}`, {
+                    method: "DELETE",
+                    headers: { "x-auth-token": token }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || "Member deleted successfully!");
+                    applyFiltersAndFetch();
+                } else {
+                    console.error("Failed to delete member:", result.message);
+                    alert(`Failed to delete member: ${result.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error("Error deleting member:", error);
+                alert("Network error or server unreachable.");
+            }
+        }
+
+        // ⭐ NEW: Functions to render and handle pagination controls ⭐
+        function renderPaginationControls(currentPageFromResponse, totalPages, totalMembers, membersOnCurrentPage) {
+            currentPage = currentPageFromResponse; // Update global currentPage to match response
+            pageNumbersDiv.innerHTML = ''; // Clear previous page numbers
+
+            // Update info text
+            const startIndex = (currentPage - 1) * membersPerPage + 1;
+            const endIndex = Math.min(startIndex + membersOnCurrentPage - 1, totalMembers);
+            paginationInfoSpan.textContent = `Showing ${startIndex}-${endIndex} of ${totalMembers} members`;
+
+            // Render page number buttons
+            const maxPageButtons = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+            if (endPage - startPage + 1 < maxPageButtons && totalPages >= maxPageButtons) {
+                startPage = Math.max(1, endPage - maxPageButtons + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.classList.add(
+                    'px-3', 'py-1', 'rounded-lg', 'font-semibold',
+                    'hover:bg-gray-700', 'transition-colors',
+                    ...(i === currentPage ? ['bg-primary', 'text-black'] : ['bg-gray-800', 'text-gray-300'])
+                );
+                pageButton.addEventListener('click', () => {
+                    if (i !== currentPage) {
+                        currentPage = i;
+                        applyFiltersAndFetch(); // Call applyFiltersAndFetch to use current filters
+                    }
+                });
+                pageNumbersDiv.appendChild(pageButton);
+            }
+
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages; // Now correctly disables the persistent nextPageBtn
+        }
+
+
+        // ⭐ Function to handle bulk delete (ADD THIS ENTIRE FUNCTION) ⭐
+        async function handleBulkDelete() {
+            const selectedCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]:checked');
+            const memberIdsToDelete = [];
+
+            selectedCheckboxes.forEach(checkbox => {
+                // Get the member's _id from the data-member-id attribute on the checkbox itself
+                memberIdsToDelete.push(checkbox.dataset.memberId);
+            });
+
+            if (memberIdsToDelete.length === 0) {
+                alert('Please select at least one member to delete.');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete ${memberIdsToDelete.length} selected member(s)? This action cannot be undone.`)) {
+                return;
+            }
+
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Authentication token missing. Please log in.");
+                window.location.href = "sign_in_page.html";
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/members/bulk-delete', {
+                    method: 'POST', // Use POST as per our backend route
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify({ memberIds: memberIdsToDelete })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || `${result.deletedCount} members deleted successfully!`);
+                    const bulkActionsDropdownContentElement = document.getElementById('bulkActionsDropdownContent');
+                    if (bulkActionsDropdownContentElement) {
+                        bulkActionsDropdownContentElement.classList.add('hidden'); // Hide dropdown after action
+                    }
+                    applyFiltersAndFetch(); // Refresh the list
+                } else {
+                    console.error('Bulk delete failed:', result.message);
+                    alert(`Bulk delete failed: ${result.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Network error during bulk delete:', error);
+                alert('Network error or server unreachable during bulk delete. Please try again.');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

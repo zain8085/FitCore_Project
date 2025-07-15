@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Packages - Fitness Management System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#00FF00', secondary: '#10b981' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #00FF00;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #00FF00;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #333333;
+            border-radius: 4px;
+            background-color: #222222;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #00FF00;
+            border-color: #00FF00;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300FF00'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .status-active {
+            background-color: rgba(0, 255, 0, 0.2);
+            color: #00FF00;
+        }
+
+        .status-inactive {
+            background-color: rgba(128, 128, 128, 0.2);
+            color: #CCCCCC;
+        }
+
+        .custom-range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #333333;
+            outline: none;
+        }
+
+        .custom-range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00FF00;
+            cursor: pointer;
+        }
+
+        .custom-range-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00FF00;
+            cursor: pointer;
+            border: none;
+        }
+
+        .package-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .package-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .package-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .package-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.package-slider {
+            background-color: #00FF00;
+        }
+
+        input:checked+.package-slider:before {
+            transform: translateX(24px);
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            background-color: rgba(87, 181, 231, 0.2);
+            color: #57B5E7;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+
+         <!-- Sidebar -->
+        <aside class="w-64 bg-black shadow-lg hidden md:block border-r border-gray-800">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-['Pacifico'] text-primary">FitCore</span>
+                        <!-- <span class="ml-2 text-sm font-semibold text-white">Admin Panel</span> -->
+                    </div>
+                </div>
+                <nav class="flex-1 overflow-y-auto py-4">
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="Admin-and-Member-Management.html"
+                                 class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-dashboard-line"></i>
+                                </div>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Gym-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-user-line"></i>
+                                </div>
+                                <span>Member Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Billing-Management-Dashboard.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-bill-line"></i>
+                                </div>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Fee-Packages-Management.html"
+                               class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary bg-opacity-20 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-primary">
+                                    <i class="ri-price-tag-3-line"></i>
+                                </div>
+                                <span>Fee Packages</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Report-Export.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-file-chart-line"></i>
+                                </div>
+                                <span>Report Export</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Supplement-Store-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-store-line"></i>
+                                </div>
+                                <span>Supplement Store</span>
+                            </a>
+                        </li>
+        
+                    </ul>
+                </nav>
+                <div class="p-4 border-t border-gray-800">
+                    <a href="../sign_in.html">
+                        <button
+                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-300 bg-gray-900 hover:bg-gray-800 rounded-lg !rounded-button">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                <i class="ri-logout-box-line"></i>
+                            </div>
+                            <span>Log Out</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-black shadow-md z-10 border-b border-gray-800">
+                <div class="px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center md:hidden">
+                            <button type="button" class="text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-menu-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                            <div class="max-w-lg w-full lg:max-w-xs">
+                                <label for="search" class="sr-only">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+                                            <i class="ri-search-line"></i>
+                                        </div>
+                                    </div>
+                                    <input id="search" name="search"
+                                        class="block w-full pl-10 pr-3 py-2 border-none rounded-lg text-sm placeholder-gray-500 bg-gray-900 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                                        placeholder="Search packages..." type="search">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <button type="button"
+                                class="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-notification-3-line"></i>
+                                </div>
+                            </button>
+                            <div class="ml-3 relative">
+                                <div>
+                                    <button type="button"
+                                        class="max-w-xs flex items-center text-sm rounded-full focus:outline-none"
+                                        id="user-menu-button">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300">
+                                            <i class="ri-user-line"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto bg-black p-4 sm:p-6 lg:p-8">
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-white">Fee Packages</h1>
+                        <p class="mt-1 text-sm text-gray-400">Manage membership and service pricing packages</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+                        <button id="add-package-btn"
+                            class="px-4 py-2 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-black !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                                <span>Add New Package</span>
+                            </div>
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-gray-800 text-white font-medium rounded-lg shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 focus:ring-offset-black !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                    <i class="ri-upload-2-line"></i>
+                                </div>
+                                <span>Import Packages</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Total Active Packages</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">3</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-primary">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-primary ml-1">+2 from last month</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center text-primary">
+                                <i class="ri-price-tag-3-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Most Popular Package</p>
+                                <h3 class="text-xl font-semibold text-white mt-1">Premium Monthly</h3>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs text-gray-400 ml-1">248 active members</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-blue-500 bg-opacity-20 flex items-center justify-center text-blue-400">
+                                <i class="ri-vip-crown-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Total Revenue from Packages</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">₹42,580</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-primary">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-primary ml-1">+8.3% from last month</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-green-500 bg-opacity-20 flex items-center justify-center text-green-400">
+                                <i class="ri-money-dollar-circle-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Expiring Soon</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">35</h3>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs text-orange-400 ml-1">Next 7 days</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-orange-500 bg-opacity-20 flex items-center justify-center text-orange-400">
+                                <i class="ri-time-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Distribution Chart -->
+                <div class="bg-gray-900 rounded-lg shadow-lg p-4 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-white">Package Distribution</h2>
+                        <div class="relative">
+                            <button
+                                class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span>Last 30 Days</span>
+                                    <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="package-chart" class="w-full h-64"></div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="bg-gray-900 rounded-lg shadow-lg mb-6 p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Package Type</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="">All Types</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                    <option value="lifetime">Lifetime</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Status</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Price Range</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="range" min="0" max="500" value="250" class="custom-range-slider"
+                                    id="price-range">
+                                <span class="text-sm text-white" id="price-display">₹0 - ₹250</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Features</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="">All Features</option>
+                                    <option value="pool">Pool Access</option>
+                                    <option value="trainer">Personal Trainer</option>
+                                    <option value="classes">Group Classes</option>
+                                    <option value="spa">Spa Access</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary bg-opacity-20 text-primary">
+                            <span>Active</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary bg-opacity-20 text-primary">
+                            <span>Monthly</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-400">Showing 1-8 of 12 packages</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button
+                            class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                    <i class="ri-download-line"></i>
+                                </div>
+                                <span>Export</span>
+                            </div>
+                        </button>
+                        <button
+                            class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                    <i class="ri-printer-line"></i>
+                                </div>
+                                <span>Print</span>
+                            </div>
+                        </button>
+                        <div class="relative">
+                            <button
+                                class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span>Bulk Actions</span>
+                                    <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packages Table -->
+                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-800">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-2">
+                                            <span>Package Name</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Price</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Duration</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Features</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Members</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Status</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Basic Monthly</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">₹299</div>
+                                        <div class="text-xs text-gray-400">per month</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">1 Month</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap">
+                                            <span class="feature-tag">Gym Access</span>
+                                            <span class="feature-tag">Locker</span>
+                                            <span class="feature-tag">Shower</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">142</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <label class="package-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="package-slider"></span>
+                                        </label>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Edit Package">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-edit-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Duplicate">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-file-copy-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Standard Monthly</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">₹599</div>
+                                        <div class="text-xs text-gray-400">per month</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">1 Month</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap">
+                                            <span class="feature-tag">Gym Access</span>
+                                            <span class="feature-tag">Locker</span>
+                                            <span class="feature-tag">Shower</span>
+                                            <span class="feature-tag">Group Classes</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">240</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <label class="package-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="package-slider"></span>
+                                        </label>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Edit Package">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-edit-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Duplicate">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-file-copy-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Premium Monthly</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">₹999</div>
+                                        <div class="text-xs text-gray-400">per month</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">1 Month</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                         <div class="flex flex-wrap">
+                                            <span class="feature-tag">Gym Access</span>
+                                            <span class="feature-tag">Pool</span>
+                                            <span class="feature-tag">Sauna</span>
+                                            <span class="feature-tag">Group Classes</span>
+                                            <span class="feature-tag">Towel Service</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-white">96</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <label class="package-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="package-slider"></span>
+                                        </label>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Edit Package">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-edit-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Duplicate">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-file-copy-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="bg-gray-900 px-4 py-3 border-t border-gray-800 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#"
+                                    class="relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 !rounded-button whitespace-nowrap">Previous</a>
+                                <a href="#"
+                                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 !rounded-button whitespace-nowrap">Next</a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-400">
+                                        Showing <span class="font-medium text-white">1</span> to <span
+                                            class="font-medium text-white">8</span> of <span
+                                            class="font-medium text-white">12</span> results
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                        aria-label="Pagination">
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-700 bg-gray-800 text-sm font-medium text-gray-400 hover:bg-gray-700">
+                                            <span class="sr-only">Previous</span>
+                                            <div class="w-5 h-5 flex items-center justify-center">
+                                                <i class="ri-arrow-left-s-line"></i>
+                                            </div>
+                                        </a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-primary text-sm font-medium text-black">1</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700">2</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-700 bg-gray-800 text-sm font-medium text-gray-400 hover:bg-gray-700">
+                                            <span class="sr-only">Next</span>
+                                            <div class="w-5 h-5 flex items-center justify-center">
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </div>
+                                        </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add New Package Modal -->
+    <div id="add-package-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
+            <div class="relative bg-gray-900 rounded-lg max-w-2xl w-full mx-auto shadow-xl">
+                <div class="px-6 py-4 border-b border-gray-800">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-medium text-white">Add New Package</h3>
+                        <button id="close-modal" class="text-gray-400 hover:text-white">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="ri-close-line"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <form>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="package-name"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Package Name</label>
+                                    <input type="text" id="package-name"
+                                        class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary"
+                                        placeholder="e.g. Premium Monthly">
+                                </div>
+                                <div>
+                                    <label for="package-price"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Price</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-400">$</span>
+                                        </div>
+                                        <input type="number" id="package-price"
+                                            class="w-full pl-8 bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary"
+                                            placeholder="99.99">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="package-duration"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Duration</label>
+                                    <div class="relative">
+                                        <select id="package-duration"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="1">1 Month</option>
+                                            <option value="3">3 Months</option>
+                                            <option value="6">6 Months</option>
+                                            <option value="12">12 Months</option>
+                                            <option value="lifetime">Lifetime</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="package-type"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Package Type</label>
+                                    <div class="relative">
+                                        <select id="package-type"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="standard">Standard</option>
+                                            <option value="student">Student</option>
+                                            <option value="senior">Senior</option>
+                                            <option value="family">Family</option>
+                                            <option value="corporate">Corporate</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400 mb-1">Features</label>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-gym" class="custom-checkbox mr-2">
+                                        <label for="feature-gym" class="text-sm text-white">Gym Access</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-pool" class="custom-checkbox mr-2">
+                                        <label for="feature-pool" class="text-sm text-white">Pool Access</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-classes" class="custom-checkbox mr-2">
+                                        <label for="feature-classes" class="text-sm text-white">Group Classes</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-trainer" class="custom-checkbox mr-2">
+                                        <label for="feature-trainer" class="text-sm text-white">Personal Trainer</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-spa" class="custom-checkbox mr-2">
+                                        <label for="feature-spa" class="text-sm text-white">Spa Access</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-towel" class="custom-checkbox mr-2">
+                                        <label for="feature-towel" class="text-sm text-white">Towel Service</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-locker" class="custom-checkbox mr-2">
+                                        <label for="feature-locker" class="text-sm text-white">Locker</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-nutrition" class="custom-checkbox mr-2">
+                                        <label for="feature-nutrition" class="text-sm text-white">Nutrition Plan</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="feature-parking" class="custom-checkbox mr-2">
+                                        <label for="feature-parking" class="text-sm text-white">Free Parking</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="package-description"
+                                    class="block text-sm font-medium text-gray-400 mb-1">Description</label>
+                                <textarea id="package-description" rows="3"
+                                    class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary"
+                                    placeholder="Describe the package benefits..."></textarea>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <label class="text-sm font-medium text-gray-400 mr-3">Status:</label>
+                                    <label class="package-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="package-slider"></span>
+                                    </label>
+                                    <span class="ml-2 text-sm text-white">Active</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="text-sm font-medium text-gray-400 mr-3">Auto-renewal:</label>
+                                    <label class="package-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="package-slider"></span>
+                                    </label>
+                                    <span class="ml-2 text-sm text-white">Enabled</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-800 flex justify-end">
+                    <button
+                        class="px-4 py-2 bg-gray-800 text-white font-medium rounded-lg shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 focus:ring-offset-gray-900 mr-3 !rounded-button whitespace-nowrap">Cancel</button>
+                    <button
+                        class="px-4 py-2 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-gray-900 !rounded-button whitespace-nowrap">Create
+                        Package</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Package Distribution Chart
+            const packageChart = echarts.init(document.getElementById('package-chart'));
+            const option = {
+                animation: false,
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#eee',
+                    borderWidth: 1,
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: 10,
+                    top: 'center',
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+                series: [
+                    {
+                        name: 'Package Distribution',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 8,
+                            borderColor: '#000',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '14',
+                                fontWeight: 'bold',
+                                color: '#fff'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: [
+                            { value: 142, name: 'Basic Monthly', itemStyle: { color: 'rgba(87, 181, 231, 1)' } },
+                            { value: 248, name: 'Standard Monthly', itemStyle: { color: 'rgba(141, 211, 199, 1)' } },
+                            { value: 152, name: 'Premium Monthy', itemStyle: { color: 'rgba(179, 222, 105, 1)' } },
+                        ]
+                    }
+                ]
+            };
+            packageChart.setOption(option);
+
+            // Modal functionality
+            const addPackageBtn = document.getElementById('add-package-btn');
+            const addPackageModal = document.getElementById('add-package-modal');
+            const closeModal = document.getElementById('close-modal');
+
+            if (addPackageBtn && addPackageModal) {
+                addPackageBtn.addEventListener('click', function () {
+                    addPackageModal.classList.remove('hidden');
+                });
+            }
+
+            if (closeModal && addPackageModal) {
+                closeModal.addEventListener('click', function () {
+                    addPackageModal.classList.add('hidden');
+                });
+
+                // Close modal when clicking outside
+                addPackageModal.addEventListener('click', function (e) {
+                    if (e.target === addPackageModal) {
+                        addPackageModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Checkbox functionality
+            const mainCheckbox = document.querySelector('thead input[type="checkbox"]');
+            const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+            if (mainCheckbox) {
+                mainCheckbox.addEventListener('change', function () {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.checked = mainCheckbox.checked;
+                    });
+                });
+            }
+
+            // Filter tag removal
+            const filterTags = document.querySelectorAll('.inline-flex.rounded-full button');
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function () {
+                    this.parentElement.remove();
+                });
+            });
+
+            // Price range slider
+            const priceRange = document.getElementById('price-range');
+            const priceDisplay = document.getElementById('price-display');
+
+            if (priceRange && priceDisplay) {
+                priceRange.addEventListener('input', function () {
+                    priceDisplay.textContent = `$0 - $${this.value}`;
+                });
+            }
+
+            // Toggle switches for package status
+            const packageSwitches = document.querySelectorAll('.package-switch input');
+            packageSwitches.forEach(switchEl => {
+                switchEl.addEventListener('change', function () {
+                    // Here you would typically update the package status via API
+                    console.log('Package status changed:', this.checked ? 'active' : 'inactive');
+                });
+            });
+
+            // Window resize handler for chart
+            window.addEventListener('resize', function () {
+                packageChart.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>

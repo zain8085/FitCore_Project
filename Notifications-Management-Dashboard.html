@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Fitness Management System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#00FF00', secondary: '#10b981' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #00FF00;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #00FF00;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #333333;
+            border-radius: 4px;
+            background-color: #222222;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #00FF00;
+            border-color: #00FF00;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300FF00'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-sent {
+            background-color: rgba(0, 255, 0, 0.2);
+            color: #00FF00;
+        }
+
+        .status-read {
+            background-color: rgba(87, 181, 231, 0.2);
+            color: #57B5E7;
+        }
+
+        .status-pending {
+            background-color: rgba(251, 191, 114, 0.2);
+            color: #FBBF72;
+        }
+
+        .status-failed {
+            background-color: rgba(252, 141, 98, 0.2);
+            color: #FC8D62;
+        }
+
+        .notification-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .notification-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .notification-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .notification-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.notification-slider {
+            background-color: #00FF00;
+        }
+
+        input:checked+.notification-slider:before {
+            transform: translateX(24px);
+        }
+
+        .tab-button {
+            position: relative;
+        }
+
+        .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #00FF00;
+        }
+
+        .template-card {
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        
+       <!-- Sidebar -->
+        <aside class="w-64 bg-black shadow-lg hidden md:block border-r border-gray-800">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-['Pacifico'] text-primary">FitCore</span>
+                        <!-- <span class="ml-2 text-sm font-semibold text-white">Admin Panel</span> -->
+                    </div>
+                </div>
+                <nav class="flex-1 overflow-y-auto py-4">
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="Admin-and-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-dashboard-line"></i>
+                                </div>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Gym-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-user-line"></i>
+                                </div>
+                                <span>Member Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Billing-Management-Dashboard.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-bill-line"></i>
+                                </div>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Fee-Packages-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-price-tag-3-line"></i>
+                                </div>
+                                <span>Fee Packages</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Notifications-Management-Dashboard.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary bg-opacity-20 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-primary">
+                                    <i class="ri-notification-line"></i>
+                                </div>
+                                <span>Notifications</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Report-Export.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-file-chart-line"></i>
+                                </div>
+                                <span>Report Export</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Supplement-Store-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-store-line"></i>
+                                </div>
+                                <span>Supplement Store</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Diet-Plans.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-restaurant-line"></i>
+                                </div>
+                                <span>Diet Plans</span>
+                            </a>
+                        </li>
+                
+                    </ul>
+                </nav>
+                <div class="p-4 border-t border-gray-800">
+                    <button
+                        class="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-300 bg-gray-900 hover:bg-gray-800 rounded-lg !rounded-button">
+                        <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                            <i class="ri-logout-box-line"></i>
+                        </div>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-black shadow-md z-10 border-b border-gray-800">
+                <div class="px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center md:hidden">
+                            <button type="button" class="text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-menu-line"></i>
+                                </div>
+                            </button>
+                            <span class="ml-2 text-lg font-['Pacifico'] text-primary">logo</span>
+                        </div>
+                        <div class="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                            <div class="max-w-lg w-full lg:max-w-xs">
+                                <label for="search" class="sr-only">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+                                            <i class="ri-search-line"></i>
+                                        </div>
+                                    </div>
+                                    <input id="search" name="search"
+                                        class="block w-full pl-10 pr-3 py-2 border-none rounded-lg text-sm placeholder-gray-500 bg-gray-900 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                                        placeholder="Search notifications..." type="search">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <button type="button"
+                                class="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="ri-notification-3-line"></i>
+                                </div>
+                            </button>
+                            <div class="ml-3 relative">
+                                <div>
+                                    <button type="button"
+                                        class="max-w-xs flex items-center text-sm rounded-full focus:outline-none"
+                                        id="user-menu-button">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-300">
+                                            <i class="ri-user-line"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto bg-black p-4 sm:p-6 lg:p-8">
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-white">Notifications</h1>
+                        <p class="mt-1 text-sm text-gray-400">Manage system notifications and member alerts</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+                        <button id="create-notification-btn"
+                            class="px-4 py-2 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-black !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                    <i class="ri-add-line"></i>
+                                </div>
+                                <span>Create New Notification</span>
+                            </div>
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-gray-800 text-white font-medium rounded-lg shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 focus:ring-offset-black !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                    <i class="ri-settings-line"></i>
+                                </div>
+                                <span>Notification Settings</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Total Notifications</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">1,248</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-primary">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-primary ml-1">+12% from last month</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center text-primary">
+                                <i class="ri-notification-4-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Unread Notifications</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">183</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-red-400">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-red-400 ml-1">+5% from last week</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-blue-500 bg-opacity-20 flex items-center justify-center text-blue-400">
+                                <i class="ri-mail-unread-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Engagement Rate</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">76.4%</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-primary">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-primary ml-1">+3.2% from last month</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-green-500 bg-opacity-20 flex items-center justify-center text-green-400">
+                                <i class="ri-bar-chart-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">Failed Deliveries</p>
+                                <h3 class="text-2xl font-semibold text-white mt-1">24</h3>
+                                <div class="flex items-center mt-1">
+                                    <div class="w-4 h-4 flex items-center justify-center text-primary">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                    <span class="text-xs text-primary ml-1">-8% from last month</span>
+                                </div>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full bg-orange-500 bg-opacity-20 flex items-center justify-center text-orange-400">
+                                <i class="ri-error-warning-line text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engagement Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-medium text-white">Notification Engagement</h2>
+                            <div class="relative">
+                                <button
+                                    class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span>Last 30 Days</span>
+                                        <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                            <i class="ri-arrow-down-s-line"></i>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="engagement-chart" class="w-full h-64"></div>
+                    </div>
+
+                    <div class="bg-gray-900 rounded-lg shadow-lg p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-medium text-white">Notification Types</h2>
+                            <div class="relative">
+                                <button
+                                    class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span>Last 30 Days</span>
+                                        <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                            <i class="ri-arrow-down-s-line"></i>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="notification-types-chart" class="w-full h-64"></div>
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="bg-gray-900 rounded-lg shadow-lg mb-6 p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Status</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="all">All Notifications</option>
+                                    <option value="read">Read</option>
+                                    <option value="unread">Unread</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Type</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="all">All Types</option>
+                                    <option value="system">System</option>
+                                    <option value="member">Member</option>
+                                    <option value="billing">Billing</option>
+                                    <option value="promotion">Promotion</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Date Range</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                    <option value="custom">Custom Range</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-400">Delivery Status</label>
+                            <div class="relative">
+                                <select
+                                    class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                    <option value="all">All Status</option>
+                                    <option value="sent">Sent</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary bg-opacity-20 text-primary">
+                            <span>Unread</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-400">
+                            <span>Member</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-400">
+                            <span>Last 30 Days</span>
+                            <button class="ml-1 focus:outline-none">
+                                <div class="w-4 h-4 flex items-center justify-center">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mb-6">
+                    <div class="border-b border-gray-800">
+                        <div class="flex overflow-x-auto">
+                            <button class="tab-button active px-4 py-2 text-white font-medium focus:outline-none">
+                                All Notifications
+                            </button>
+                            <button
+                                class="tab-button px-4 py-2 text-gray-400 hover:text-white font-medium focus:outline-none">
+                                Scheduled
+                            </button>
+                            <button
+                                class="tab-button px-4 py-2 text-gray-400 hover:text-white font-medium focus:outline-none">
+                                Templates
+                            </button>
+                            <button
+                                class="tab-button px-4 py-2 text-gray-400 hover:text-white font-medium focus:outline-none">
+                                Analytics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-400">Showing 1-10 of 183 notifications</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button
+                            class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                    <i class="ri-download-line"></i>
+                                </div>
+                                <span>Export</span>
+                            </div>
+                        </button>
+                        <div class="relative">
+                            <button
+                                class="px-3 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 !rounded-button whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span>Bulk Actions</span>
+                                    <div class="w-4 h-4 flex items-center justify-center ml-2">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Table -->
+                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden mb-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-800">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-2">
+                                            <span>Notification</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Type</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Recipients</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Sent Date</span>
+                                            <div class="w-4 h-4 flex items-center justify-center ml-1">
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <span>Status</span>
+                                        </div>
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Membership Renewal Reminder
+                                                </div>
+                                                <div class="text-xs text-gray-400 max-w-md">Your Premium Monthly
+                                                    membership will expire in 7 days. Renew now to avoid interruption.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-400">
+                                            Member
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">248 members</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">May 5, 2025</div>
+                                        <div class="text-xs text-gray-400">10:24 AM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-sent">
+                                            <div class="w-2 h-2 rounded-full bg-primary mr-1.5"></div>
+                                            Sent
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">New Fitness Class: HIIT
+                                                    Bootcamp</div>
+                                                <div class="text-xs text-gray-400 max-w-md">Join our new high-intensity
+                                                    interval training bootcamp starting next Monday at 6:00 PM. Limited
+                                                    spots available!</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-400">
+                                            Promotion
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">All members</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">May 4, 2025</div>
+                                        <div class="text-xs text-gray-400">2:15 PM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-read">
+                                            <div class="w-2 h-2 rounded-full bg-blue-400 mr-1.5"></div>
+                                            Read (76%)
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">System Maintenance Notice
+                                                </div>
+                                                <div class="text-xs text-gray-400 max-w-md">Our system will be
+                                                    undergoing scheduled maintenance on May 10, 2025, from 2:00 AM to
+                                                    4:00 AM. Some features may be unavailable during this time.</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500 bg-opacity-20 text-purple-400">
+                                            System
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">All users</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">May 3, 2025</div>
+                                        <div class="text-xs text-gray-400">9:00 AM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-sent">
+                                            <div class="w-2 h-2 rounded-full bg-primary mr-1.5"></div>
+                                            Sent
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Payment Failed</div>
+                                                <div class="text-xs text-gray-400 max-w-md">Your recent payment for
+                                                    Premium Monthly membership was declined. Please update your payment
+                                                    information to avoid service interruption.</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500 bg-opacity-20 text-red-400">
+                                            Billing
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">36 members</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">May 2, 2025</div>
+                                        <div class="text-xs text-gray-400">6:45 PM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-failed">
+                                            <div class="w-2 h-2 rounded-full bg-red-400 mr-1.5"></div>
+                                            Failed (8)
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Summer Fitness Challenge
+                                                </div>
+                                                <div class="text-xs text-gray-400 max-w-md">Join our 30-day summer
+                                                    fitness challenge starting June 1st. Complete daily workouts, track
+                                                    progress, and win prizes!</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-400">
+                                            Promotion
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">All members</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">May 1, 2025</div>
+                                        <div class="text-xs text-gray-400">11:30 AM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-read">
+                                            <div class="w-2 h-2 rounded-full bg-blue-400 mr-1.5"></div>
+                                            Read (82%)
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">New Personal Trainer
+                                                    Available</div>
+                                                <div class="text-xs text-gray-400 max-w-md">We're excited to welcome
+                                                    Michael Thompson to our personal training team. Book your session
+                                                    today!</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-400">
+                                            Member
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">VIP members</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">Apr 28, 2025</div>
+                                        <div class="text-xs text-gray-400">3:15 PM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-sent">
+                                            <div class="w-2 h-2 rounded-full bg-primary mr-1.5"></div>
+                                            Sent
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-900 hover:bg-gray-800">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" class="custom-checkbox mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-white">Holiday Hours Update</div>
+                                                <div class="text-xs text-gray-400 max-w-md">Our facility will operate
+                                                    with modified hours during the upcoming holiday weekend. Check the
+                                                    schedule for details.</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500 bg-opacity-20 text-purple-400">
+                                            System
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">All users</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">Apr 25, 2025</div>
+                                        <div class="text-xs text-gray-400">10:00 AM</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="status-badge status-sent">
+                                            <div class="w-2 h-2 rounded-full bg-primary mr-1.5"></div>
+                                            Sent
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="View Details">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-eye-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                                title="Resend">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-refresh-line"></i>
+                                                </div>
+                                            </button>
+                                            <button
+                                                class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-red-500 focus:outline-none"
+                                                title="Delete">
+                                                <div class="w-5 h-5 flex items-center justify-center">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="bg-gray-900 px-4 py-3 border-t border-gray-800 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#"
+                                    class="relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 !rounded-button whitespace-nowrap">Previous</a>
+                                <a href="#"
+                                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 !rounded-button whitespace-nowrap">Next</a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-400">
+                                        Showing <span class="font-medium text-white">1</span> to <span
+                                            class="font-medium text-white">7</span> of <span
+                                            class="font-medium text-white">183</span> results
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                                        aria-label="Pagination">
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-700 bg-gray-800 text-sm font-medium text-gray-400 hover:bg-gray-700">
+                                            <span class="sr-only">Previous</span>
+                                            <div class="w-5 h-5 flex items-center justify-center">
+                                                <i class="ri-arrow-left-s-line"></i>
+                                            </div>
+                                        </a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-primary text-sm font-medium text-black">1</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700">2</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700">3</a>
+                                        <span
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-gray-800 text-sm font-medium text-gray-300">...</span>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-4 py-2 border border-gray-700 bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700">19</a>
+                                        <a href="#"
+                                            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-700 bg-gray-800 text-sm font-medium text-gray-400 hover:bg-gray-700">
+                                            <span class="sr-only">Next</span>
+                                            <div class="w-5 h-5 flex items-center justify-center">
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </div>
+                                        </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Templates Section -->
+                    <h2 class="text-xl font-semibold text-white mb-4">Notification Templates</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden template-card">
+                            <div class="p-4 border-b border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-md font-medium text-white">Membership Renewal</h3>
+                                    <div class="flex space-x-1">
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Edit Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-edit-line"></i>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Use Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-add-line"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <p class="text-xs text-gray-400">Your {package_name} membership will expire in {days}
+                                    days. Renew now to avoid interruption.</p>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span class="text-xs text-gray-500">Used 248 times</span>
+                                    <span class="text-xs text-gray-500">Last used: May 5, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden template-card">
+                            <div class="p-4 border-b border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-md font-medium text-white">New Class Announcement</h3>
+                                    <div class="flex space-x-1">
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Edit Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-edit-line"></i>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Use Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-add-line"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <p class="text-xs text-gray-400">Join our new {class_name} class starting {start_date}
+                                    at {start_time}. Limited spots available!</p>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span class="text-xs text-gray-500">Used 156 times</span>
+                                    <span class="text-xs text-gray-500">Last used: May 4, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden template-card">
+                            <div class="p-4 border-b border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-md font-medium text-white">Payment Reminder</h3>
+                                    <div class="flex space-x-1">
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Edit Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-edit-line"></i>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Use Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-add-line"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <p class="text-xs text-gray-400">Your payment of ${amount} for {package_name} is due on
+                                    {due_date}. Please update your payment information.</p>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span class="text-xs text-gray-500">Used 312 times</span>
+                                    <span class="text-xs text-gray-500">Last used: May 2, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden template-card">
+                            <div class="p-4 border-b border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-md font-medium text-white">Special Promotion</h3>
+                                    <div class="flex space-x-1">
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Edit Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-edit-line"></i>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="p-1 rounded-full bg-gray-800 text-gray-300 hover:text-primary focus:outline-none"
+                                            title="Use Template">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <i class="ri-add-line"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <p class="text-xs text-gray-400">Limited time offer: {discount}% off on {package_name}
+                                    when you upgrade before {end_date}. Use code: {promo_code}</p>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span class="text-xs text-gray-500">Used 98 times</span>
+                                    <span class="text-xs text-gray-500">Last used: Apr 28, 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Notification Modal -->
+    <div id="create-notification-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black bg-opacity-75 transition-opacity"></div>
+            <div class="relative bg-gray-900 rounded-lg max-w-2xl w-full mx-auto shadow-xl">
+                <div class="px-6 py-4 border-b border-gray-800">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-medium text-white">Create New Notification</h3>
+                        <button id="close-modal" class="text-gray-400 hover:text-white">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="ri-close-line"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <form>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label for="notification-title"
+                                    class="block text-sm font-medium text-gray-400 mb-1">Notification Title</label>
+                                <input type="text" id="notification-title"
+                                    class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary"
+                                    placeholder="Enter notification title">
+                            </div>
+                            <div>
+                                <label for="notification-message"
+                                    class="block text-sm font-medium text-gray-400 mb-1">Message</label>
+                                <textarea id="notification-message" rows="4"
+                                    class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary"
+                                    placeholder="Enter notification message"></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="notification-type"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Notification Type</label>
+                                    <div class="relative">
+                                        <select id="notification-type"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="member">Member</option>
+                                            <option value="system">System</option>
+                                            <option value="billing">Billing</option>
+                                            <option value="promotion">Promotion</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="recipient-group"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Recipients</label>
+                                    <div class="relative">
+                                        <select id="recipient-group"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="all">All Members</option>
+                                            <option value="active">Active Members</option>
+                                            <option value="expiring">Expiring Memberships</option>
+                                            <option value="vip">VIP Members</option>
+                                            <option value="inactive">Inactive Members</option>
+                                            <option value="custom">Custom Selection</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="delivery-method"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Delivery Method</label>
+                                    <div class="relative">
+                                        <select id="delivery-method"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="app">In-App</option>
+                                            <option value="email">Email</option>
+                                            <option value="sms">SMS</option>
+                                            <option value="all">All Methods</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="send-time" class="block text-sm font-medium text-gray-400 mb-1">Send
+                                        Time</label>
+                                    <div class="relative">
+                                        <select id="send-time"
+                                            class="custom-select w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                            <option value="now">Send Now</option>
+                                            <option value="schedule">Schedule</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="schedule-container" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="schedule-date"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Date</label>
+                                    <input type="date" id="schedule-date"
+                                        class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                </div>
+                                <div>
+                                    <label for="schedule-time"
+                                        class="block text-sm font-medium text-gray-400 mb-1">Time</label>
+                                    <input type="time" id="schedule-time"
+                                        class="w-full bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary">
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <label class="text-sm font-medium text-gray-400 mr-3">Priority:</label>
+                                    <div class="relative">
+                                        <select id="priority"
+                                            class="custom-select bg-gray-800 border-none text-white rounded-lg focus:ring-primary focus:border-primary text-sm">
+                                            <option value="normal">Normal</option>
+                                            <option value="high">High</option>
+                                            <option value="urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="text-sm font-medium text-gray-400 mr-3">Require Read Receipt:</label>
+                                    <label class="notification-switch">
+                                        <input type="checkbox">
+                                        <span class="notification-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-800 flex justify-end">
+                    <button
+                        class="px-4 py-2 bg-gray-800 text-white font-medium rounded-lg shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 focus:ring-offset-gray-900 mr-3 !rounded-button whitespace-nowrap">Cancel</button>
+                    <button
+                        class="px-4 py-2 bg-primary text-black font-medium rounded-lg shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-gray-900 !rounded-button whitespace-nowrap">Send
+                        Notification</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Engagement Chart
+            const engagementChart = echarts.init(document.getElementById('engagement-chart'));
+            const engagementOption = {
+                animation: false,
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#eee',
+                    borderWidth: 1,
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    top: '10%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['Apr 5', 'Apr 10', 'Apr 15', 'Apr 20', 'Apr 25', 'Apr 30', 'May 5'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#444'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#ccc'
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: {
+                        lineStyle: {
+                            color: '#444'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#333'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#ccc'
+                    }
+                },
+                series: [
+                    {
+                        name: 'Open Rate',
+                        type: 'line',
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(87, 181, 231, 1)'
+                        },
+                        areaStyle: {
+                            opacity: 0.1,
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0, color: 'rgba(87, 181, 231, 0.3)'
+                                }, {
+                                    offset: 1, color: 'rgba(87, 181, 231, 0.1)'
+                                }]
+                            }
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: [68, 72, 75, 71, 78, 82, 76]
+                    },
+                    {
+                        name: 'Click Rate',
+                        type: 'line',
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: 'rgba(141, 211, 199, 1)'
+                        },
+                        areaStyle: {
+                            opacity: 0.1,
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0, color: 'rgba(141, 211, 199, 0.3)'
+                                }, {
+                                    offset: 1, color: 'rgba(141, 211, 199, 0.1)'
+                                }]
+                            }
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: [32, 35, 38, 42, 45, 48, 43]
+                    }
+                ]
+            };
+            engagementChart.setOption(engagementOption);
+
+            // Initialize Notification Types Chart
+            const notificationTypesChart = echarts.init(document.getElementById('notification-types-chart'));
+            const notificationTypesOption = {
+                animation: false,
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderColor: '#eee',
+                    borderWidth: 1,
+                    textStyle: {
+                        color: '#1f2937'
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: 10,
+                    top: 'center',
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+                series: [
+                    {
+                        name: 'Notification Types',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 8,
+                            borderColor: '#000',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '14',
+                                fontWeight: 'bold',
+                                color: '#fff'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: [
+                            { value: 42, name: 'Member', itemStyle: { color: 'rgba(87, 181, 231, 1)' } },
+                            { value: 28, name: 'System', itemStyle: { color: 'rgba(141, 211, 199, 1)' } },
+                            { value: 18, name: 'Billing', itemStyle: { color: 'rgba(251, 191, 114, 1)' } },
+                            { value: 12, name: 'Promotion', itemStyle: { color: 'rgba(252, 141, 98, 1)' } }
+                        ]
+                    }
+                ]
+            };
+            notificationTypesChart.setOption(notificationTypesOption);
+            // Modal functionality
+            const createNotificationBtn = document.getElementById('create-notification-btn');
+            const createNotificationModal = document.getElementById('create-notification-modal');
+            const closeModal = document.getElementById('close-modal');
+            if (createNotificationBtn && createNotificationModal) {
+                createNotificationBtn.addEventListener('click', function () {
+                    createNotificationModal.classList.remove('hidden');
+                });
+            }
+            if (closeModal && createNotificationModal) {
+                closeModal.addEventListener('click', function () {
+                    createNotificationModal.classList.add('hidden');
+                });
+                // Close modal when clicking outside
+                createNotificationModal.addEventListener('click', function (e) {
+                    if (e.target === createNotificationModal) {
+                        createNotificationModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Schedule time toggle
+            const sendTimeSelect = document.getElementById('send-time');
+            const scheduleContainer = document.getElementById('schedule-container');
+            if (sendTimeSelect && scheduleContainer) {
+                sendTimeSelect.addEventListener('change', function () {
+                    if (this.value === 'schedule') {
+                        scheduleContainer.classList.remove('hidden');
+                    } else {
+                        scheduleContainer.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.add('text-gray-400');
+                        btn.classList.remove('text-white');
+                    });
+                    this.classList.add('active');
+                    this.classList.remove('text-gray-400');
+                    this.classList.add('text-white');
+                });
+            });
+
+            // Checkbox functionality
+            const mainCheckbox = document.querySelector('thead input[type="checkbox"]');
+            const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            if (mainCheckbox) {
+                mainCheckbox.addEventListener('change', function () {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.checked = mainCheckbox.checked;
+                    });
+                });
+            }
+
+            // Filter tag removal
+            const filterTags = document.querySelectorAll('.inline-flex.rounded-full button');
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function () {
+                    this.parentElement.remove();
+                });
+            });
+
+            // Window resize handler for charts
+            window.addEventListener('resize', function () {
+                engagementChart.resize();
+                notificationTypesChart.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>

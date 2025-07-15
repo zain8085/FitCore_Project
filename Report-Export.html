@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Export - Fitness Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00FF00',
+            secondary: '#10b981'
+          },
+          borderRadius: {
+            button: '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-black text-white font-inter min-h-screen">
+
+  <div class="flex h-screen overflow-hidden">
+
+
+   <!-- Sidebar -->
+        <aside class="w-64 bg-black shadow-lg hidden md:block border-r border-gray-800">
+            <div class="h-full flex flex-col">
+                <div class="p-4 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-['Pacifico'] text-primary">FitCore</span>
+                        <!-- <span class="ml-2 text-sm font-semibold text-white">Admin Panel</span> -->
+                    </div>
+                </div>
+                <nav class="flex-1 overflow-y-auto py-4">
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="Admin-and-Member-Management.html"
+                                  class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-dashboard-line"></i>
+                                </div>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Gym-Member-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-user-line"></i>
+                                </div>
+                                <span>Member Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Billing-Management-Dashboard.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-bill-line"></i>
+                                </div>
+                                <span>Billing</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Fee-Packages-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-price-tag-3-line"></i>
+                                </div>
+                                <span>Fee Packages</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Report-Export.html"
+                                  class="flex items-center px-4 py-3 text-sm font-medium text-white bg-primary bg-opacity-20 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-primary">
+                                    <i class="ri-file-chart-line"></i>
+                                </div>
+                                <span>Report Export</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="Supplement-Store-Management.html"
+                                class="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-900 rounded-r-lg">
+                                <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                    <i class="ri-store-line"></i>
+                                </div>
+                                <span>Supplement Store</span>
+                            </a>
+                        </li>
+                       
+                    </ul>
+                </nav>
+                <div class="p-4 border-t border-gray-800">
+                    <a href="../sign_in.html">
+                        <button
+                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-300 bg-gray-900 hover:bg-gray-800 rounded-lg !rounded-button">
+                            <div class="w-5 h-5 flex items-center justify-center mr-3 text-gray-400">
+                                <i class="ri-logout-box-line"></i>
+                            </div>
+                            <span>Log Out</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Navigation -->
+      <header class="bg-black shadow-md z-10 border-b border-gray-800">
+        <div class="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div class="flex items-center md:hidden">
+            <i class="ri-menu-line text-white text-xl mr-3"></i>
+            <span class="text-lg font-['Pacifico'] text-primary">logo</span>
+          </div>
+          <div class="max-w-lg w-full lg:max-w-xs">
+            <input type="search" placeholder="Search reports..."
+              class="w-full px-4 py-2 bg-gray-900 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-1 focus:ring-primary" />
+          </div>
+          <div class="flex items-center space-x-4">
+            <i class="ri-notification-3-line text-gray-400 hover:text-white text-xl cursor-pointer"></i>
+            <div class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-gray-300">
+              <i class="ri-user-line"></i>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="flex-1 overflow-y-auto bg-black p-6">
+        <!-- Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-white">Report Export</h1>
+          <p class="text-sm text-gray-400 mt-1">Generate and download reports for your gym data</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-gray-900 p-6 rounded-lg shadow mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-gray-300 mb-1">Select Report Type</label>
+              <select
+                class="w-full bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 focus:ring-1 focus:ring-primary">
+                <option>Member Report</option>
+                <option>Billing Report</option>
+                <option>Attendance Report</option>
+                <option>Supplement Store Report</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-300 mb-1">From</label>
+              <input type="date"
+                class="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:ring-1 focus:ring-primary">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-300 mb-1">To</label>
+              <input type="date"
+                class="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:ring-1 focus:ring-primary">
+            </div>
+          </div>
+          <div class="mt-6 text-right">
+            <button class="bg-primary text-black px-6 py-2 rounded-button hover:bg-opacity-80 transition">Generate
+              Report</button>
+          </div>
+        </div>
+
+        <!-- Preview Table -->
+        <div class="bg-gray-900 p-6 rounded-lg shadow mb-6">
+          <h2 class="text-lg font-semibold text-white mb-4">Preview</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-800">
+              <thead class="bg-gray-800 text-left text-xs font-medium text-gray-400">
+                <tr>
+                  <th class="px-4 py-2">Name</th>
+                  <th class="px-4 py-2">Date</th>
+                  <th class="px-4 py-2">Type</th>
+                  <th class="px-4 py-2">Amount</th>
+                </tr>
+              </thead>
+              <tbody class="bg-black divide-y divide-gray-800">
+                <tr>
+                  <td class="px-4 py-2 text-sm text-white">John Doe</td>
+                  <td class="px-4 py-2 text-sm text-gray-400">2025-05-25</td>
+                  <td class="px-4 py-2 text-sm text-gray-400">Billing</td>
+                  <td class="px-4 py-2 text-sm text-white">$59.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="text-right">
+          <button
+            class="bg-gray-800 text-white px-4 py-2 rounded-button border border-gray-700 hover:bg-gray-700 mr-3">Export
+            as CSV</button>
+          <button class="bg-primary text-black px-4 py-2 rounded-button hover:bg-opacity-80">Export as PDF</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -2,184 +2,297 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCore - Dashboard</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config = { theme: { extend: { colors: { primary: '#39FF14', secondary: '#1A1A1A' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            color: #fff;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Dashboard - Gym Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00FF00',
+            secondary: '#10b981'
+          },
+          borderRadius: {
+            'button': '8px'
+          }
         }
-        .dashboard-container {
-            background-color: #1A1A1A;
-            min-height: 100vh;
-            padding-top: 5rem;
-        }
-        .header {
-            background-color: #000;
-            padding: 1rem 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-        }
-        .header .logo {
-            font-family: 'Pacifico', cursive;
-            color: #39FF14;
-            font-size: 2rem;
-        }
-        .header nav a {
-            color: white;
-            margin-right: 1rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .header nav a:hover {
-            color: #39FF14;
-        }
-        .container {
-            margin: 0 auto;
-            padding: 3rem 1rem;
-            max-width: 1200px;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .section-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .card {
-            background-color: #2A2A2A;
-            border-radius: 8px;
-            padding: 2rem;
-            margin: 1rem 0;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary {
-            background-color: #39FF14;
-            color: #000;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #32cc10;
-        }
-    </style>
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
 </head>
 
-<body>
-    <header class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-blur-md">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <a href="FitCore.html" data-readdy="true" class="text-primary font-['Pacifico'] text-3xl">FitCore</a>
-    
-                <!-- Desktop Menu -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="#" data-readdy="true" class="text-white hover:text-primary transition-colors">Home</a>
-                    <a href="#" data-readdy="true" class="text-white hover:text-primary transition-colors">Dashboard</a>
-                    <a href="#" data-readdy="true" class="text-white hover:text-primary transition-colors">Profile</a>
-                    <a href="#" data-readdy="true" class="text-white hover:text-primary transition-colors">Upgrade Plans</a>
-                    <a href="sign_in.html" data-readdy="true" class="text-white hover:text-primary transition-colors">Logout</a>
-                </nav>
-    
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden w-10 h-10 flex items-center justify-center text-white" id="mobileMenuButton">
-                    <i class="ri-menu-line ri-2x"></i>
-                </button>
+<body class="bg-black text-white font-['Montserrat']">
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-black text-white flex flex-col items-center py-6 px-4 border-r border-gray-700">
+      <div class="text-3xl text-primary mb-10 font-['Pacifico']">
+        FitCore
+      </div>
+      <nav class="flex flex-col space-y-4 w-full">
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-dashboard-line mr-3"></i> Dashboard
+        </a>
+        <a href="my-profile.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-user-line mr-3"></i> My Profile
+        </a>
+        <a href="#"
+          class="flex items-center p-3 rounded-lg text-white hover:bg-gray-800 transition-colors duration-200">
+          <i class="ri-calendar-event-line mr-3"></i>
+          Schedules
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-money-dollar-circle-line mr-3"></i> Payments
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-history-line mr-3"></i> Activity Log
+        </a>
+      </nav>
+      <div class="mt-auto w-full">
+        <a href="#" class="flex items-center px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg" id="sidebarLogoutBtn">
+          <i class="ri-logout-box-line mr-3"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-8">
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-white">Member Dashboard</h1>
+        <div class="relative flex items-center space-x-4">
+          <div id="profileDropdownToggle" class="relative flex items-center space-x-2 cursor-pointer">
+            <span id="welcomeMessage" class="text-gray-300">Welcome, Loading Name!</span>
+            <button type="button" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none"
+              id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="sr-only">Open user menu</span>
+              <div id="profileAvatar"
+                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300">
+                <i class="ri-user-line text-lg"></i>
+              </div>
+            </button>
+
+            <div id="profileDropdownMenu"
+              class="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded shadow-lg py-1 w-48 hidden z-10">
+              <a href="my-profile.html" id="myProfileLink"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">My Profile</a>
+              <a href="#" id="settingsLink"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">Settings</a>
+              <div class="border-t border-gray-700 my-1"></div>
+              <a href="#" class="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300"
+                id="dropdownLogoutBtn">Logout</a>
             </div>
+          </div>
         </div>
-    
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="md:hidden hidden bg-black bg-opacity-95 w-full">
-            <div class="container mx-auto px-6 py-4 space-y-4">
-                <a href="FitCore.html" data-readdy="true" class="block text-white hover:text-primary transition-colors">Home</a>
-                <a href="#" data-readdy="true" class="block text-white hover:text-primary transition-colors">Dashboard</a>
-                <a href="#" data-readdy="true" class="block text-white hover:text-primary transition-colors">Profile</a>
-                <a href="#" data-readdy="true" class="block text-white hover:text-primary transition-colors">Upgrade Plans</a>
-                <a href="#" data-readdy="true" class="block text-white hover:text-primary transition-colors">Logout</a>
+      </header>
 
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-gray-900 rounded shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">User Details</h2>
+          <p><strong>Subscriber Name:</strong> <span id="subscriberName">Loading...</span></p>
+          <p><strong>Address:</strong> <span id="memberAddress">Loading...</span></p>
+          <p><strong>Phone:</strong> <span id="memberPhone">Loading...</span></p>
         </div>
-    </header>
 
-    <main class="dashboard-container">
-        <div class="container">
-            <div class="section-header">
-                <h2>Your Dashboard</h2>
-                <p class="text-gray-300">Welcome back, John! Here's your fitness overview.</p>
-            </div>
-
-            <div class="flex justify-between">
-                <!-- Stats Section -->
-                <div class="card w-full md:w-1/3">
-                    <h3 class="text-xl font-semibold mb-4">Your Progress</h3>
-                    <p class="text-gray-400">Track your workouts and progress here.</p>
-                    <div class="mt-6">
-                        <button class="btn-primary w-full">View Progress</button>
-                    </div>
-                </div>
-
-                <!-- Membership Section -->
-                <div class="card w-full md:w-1/3">
-                    <h3 class="text-xl font-semibold mb-4">Membership Plan</h3>
-                    <p class="text-gray-400">You're currently on the Basic plan. Upgrade for more benefits!</p>
-                    <div class="mt-6">
-                        <button class="btn-primary w-full">Upgrade Plan</button>
-                    </div>
-                </div>
-
-                <!-- Settings Section -->
-                <div class="card w-full md:w-1/3">
-                    <h3 class="text-xl font-semibold mb-4">Settings</h3>
-                    <p class="text-gray-400">Manage your account, preferences, and notifications.</p>
-                    <div class="mt-6">
-                        <button class="btn-primary w-full">Account Settings</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Section -->
-            <div class="card mt-8">
-                <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
-                <ul class="text-gray-400">
-                    <li>Completed a 5 km run - April 21, 2025</li>
-                    <li>Joined a HIIT class - April 20, 2025</li>
-                    <li>Upgraded to the Premium Plan - April 19, 2025</li>
-                </ul>
-            </div>
+        <div class="bg-gray-900 rounded shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">Membership Details</h2>
+          <p><strong>UserID:</strong> <span id="memberUserId">Loading...</span></p>
+          <p><strong>Plan Name:</strong> <span id="memberPlanName">Loading...</span></p>
+          <p><strong>Expiry Date:</strong> <span id="memberExpiryDate">Loading...</span></p>
+          <p><strong>Trainer:</strong> Sarah Connor</p>
+          <p><strong>Assigned Session:</strong> Mon, Wed, Fri - 6 AM</p>
         </div>
+      </div>
+
+      <div class="mt-8 bg-gray-900 rounded shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">Quick Actions</h2>
+        <div class="flex flex-wrap gap-4">
+          <button class="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800">Request Payment Pickup</button>
+          <button class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">View All Payments</button>
+          <button class="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">Renew Membership</button>
+          <button class="bg-yellow-700 text-white px-6 py-2 rounded hover:bg-yellow-800">Contact Support</button>
+        </div>
+      </div>
     </main>
-    
-    <script>
-        // Mobile menu toggle
-        const menuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        menuButton.addEventListener('click', function () {
-            if (mobileMenu.classList.contains('hidden')) {
-                mobileMenu.classList.remove('hidden');
-            } else {
-                mobileMenu.classList.add('hidden');
-            }
+  </div>
+
+  <script>
+    // Define your API base URL
+    const API_BASE_URL = 'http://localhost:5000/api'; // Adjust if your backend is on a different port/URL
+
+    async function fetchMemberDetails() {
+      const token = localStorage.getItem('token'); // Get the token from localStorage
+      const welcomeMessageElement = document.getElementById('welcomeMessage');
+      const profileAvatarElement = document.getElementById('profileAvatar'); // This now refers to the div with the icon
+
+      if (!token) {
+        console.error('No authentication token found. Please log in.');
+        if (welcomeMessageElement) welcomeMessageElement.textContent = 'Welcome, Guest!';
+        if (profileAvatarElement) {
+          profileAvatarElement.classList.remove('bg-gray-800', 'text-gray-300');
+          profileAvatarElement.classList.add('bg-gray-600', 'text-gray-400');
+        }
+
+        // Populate main details as N/A
+        document.getElementById('subscriberName').textContent = 'N/A';
+        document.getElementById('memberAddress').textContent = 'N/A';
+        document.getElementById('memberPhone').textContent = 'N/A';
+        document.getElementById('memberUserId').textContent = 'N/A';
+        document.getElementById('memberPlanName').textContent = 'N/A';
+        document.getElementById('memberExpiryDate').textContent = 'N/A';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/user/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+          }
         });
-    </script>
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({
+            message: 'Failed to fetch user data'
+          }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const member = await response.json();
+        console.log("Fetched Member Data:", member);
+
+        if (welcomeMessageElement) welcomeMessageElement.textContent = `Welcome, ${member.fullName || 'Member'}!`;
+
+        document.getElementById('subscriberName').textContent = member.fullName || 'N/A';
+        document.getElementById('memberAddress').textContent = member.address || 'Not Provided';
+        document.getElementById('memberPhone').textContent = member.phone || 'N/A';
+        document.getElementById('memberUserId').textContent = member.memberId || 'N/A';
+        document.getElementById('memberPlanName').textContent = member.membershipPlan || 'None';
+
+        if (member.membershipExpiresAt) {
+          const expiryDate = new Date(member.membershipExpiresAt);
+          document.getElementById('memberExpiryDate').textContent = expiryDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        } else {
+          document.getElementById('memberExpiryDate').textContent = 'N/A';
+        }
+
+      } catch (error) {
+        console.error('Error fetching member details:', error);
+        if (welcomeMessageElement) welcomeMessageElement.textContent = 'Welcome, Error!';
+        if (profileAvatarElement) {
+          profileAvatarElement.classList.remove('bg-gray-800', 'text-gray-300');
+          profileAvatarElement.classList.add('bg-red-800', 'text-red-400');
+        }
+
+        document.getElementById('subscriberName').textContent = 'Error loading';
+        document.getElementById('memberAddress').textContent = 'Error loading';
+        document.getElementById('memberPhone').textContent = 'Error loading';
+        document.getElementById('memberUserId').textContent = 'Error loading';
+        document.getElementById('memberPlanName').textContent = 'Error loading';
+        document.getElementById('memberExpiryDate').textContent = 'Error loading';
+        alert('Failed to load member details. Please try again or log in.');
+      }
+    }
+
+    // --- Dropdown Functionality ---
+    const profileDropdownToggle = document.getElementById('profileDropdownToggle');
+    const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+    const dropdownLogoutBtn = document.getElementById('dropdownLogoutBtn');
+    const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+
+    // NEW: Get references to the new links
+    const myProfileLink = document.getElementById('myProfileLink');
+    const settingsLink = document.getElementById('settingsLink');
+
+    // Function to toggle dropdown visibility
+    function toggleDropdown() {
+      profileDropdownMenu.classList.toggle('hidden');
+    }
+
+    // Function to hide dropdown
+    function hideDropdown() {
+      profileDropdownMenu.classList.add('hidden');
+    }
+
+    // Event listener to toggle dropdown when profile area is clicked
+    if (profileDropdownToggle) {
+      profileDropdownToggle.addEventListener('click', function (event) {
+        event.stopPropagation(); // Prevent click from bubbling up to document and immediately hiding dropdown
+        toggleDropdown();
+      });
+    }
+
+    // Event listener to hide dropdown when clicking anywhere outside of it
+    document.addEventListener('click', function (event) {
+      if (profileDropdownMenu && !profileDropdownMenu.contains(event.target) && !profileDropdownToggle.contains(event.target)) {
+        hideDropdown();
+      }
+    });
+
+    // Logout functionality
+    function handleLogout() {
+      localStorage.removeItem('token'); // Remove the token from local storage
+      alert('You have been logged out.');
+      window.location.href = '/login.html'; // Redirect to your login page
+    }
+
+    // Attach logout to both buttons
+    if (dropdownLogoutBtn) {
+      dropdownLogoutBtn.addEventListener('click', handleLogout);
+    }
+    if (sidebarLogoutBtn) {
+      sidebarLogoutBtn.addEventListener('click', handleLogout);
+    }
+
+    // NEW: Add functionality to "My Profile" link
+    if (myProfileLink) {
+      myProfileLink.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior (e.g., navigating to #)
+        hideDropdown(); // Hide the dropdown
+        // You can replace the alert with actual navigation to a profile page
+        const myProfileLink = document.getElementById('myProfileLink');
+        if (myProfileLink) {
+          myProfileLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = 'my-profile.html'; // <<< UPDATED LINE
+            hideDropdown();
+          });
+        }
+      });
+    }
+
+    // NEW: Add functionality to "Settings" link
+    if (settingsLink) {
+      settingsLink.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        hideDropdown(); // Hide the dropdown
+        // You can replace the alert with actual navigation to a settings page
+        alert('Navigating to Settings page...');
+        // For example: window.location.href = '/settings.html'; // You would need to create this page
+      });
+    }
+
+    // Call the function when the page loads
+    document.addEventListener('DOMContentLoaded', fetchMemberDetails);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const schedulesLink = document.getElementById('schedulesLink');
+
+      if (schedulesLink) {
+        schedulesLink.addEventListener('click', function (event) {
+          event.preventDefault(); // Prevent the default link behavior (e.g., navigating to #)
+          alert('Schedules functionality coming soon!');
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>

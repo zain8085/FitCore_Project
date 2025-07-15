@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Payments - Gym Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+<body class="bg-black text-white font-['Inter']">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold">Online Payments</h1>
+    <table class="w-full text-left mt-4">
+      <thead>
+        <tr>
+          <th class="py-2">Date</th>
+          <th class="py-2">Amount</th>
+          <th class="py-2">Razorpay Ref</th>
+        </tr>
+      </thead>
+      <tbody id="payments-table">
+        <!-- Payment records will be dynamically loaded here -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    // Fetch and display payment records
+    async function loadPayments() {
+      const userId = 'CURRENT_USER_ID'; // Replace with actual user ID
+      const res = await fetch(`/api/member/payments/${userId}`);
+      const data = await res.json();
+      const table = document.getElementById('payments-table');
+      table.innerHTML = '';
+      data.forEach(p => {
+        table.innerHTML += `<tr><td class='py-1'>${new Date(p.date).toLocaleDateString()}</td><td class='py-1'>₹${p.amount}</td><td class='py-1'>${p.razorpayPaymentId}</td></tr>`;
+      });
+    }
+    loadPayments();
+  </script>
+</body>
+</html>

@@ -73,8 +73,8 @@
                     </div>
                 </div>
 
-                  <!-- Role selection -->
-                  <div>
+                <!-- Role selection -->
+                <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Login as:</label>
                     <select id="role" name="role"
                         class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:ring-2 focus:ring-primary outline-none text-sm"
@@ -111,21 +111,25 @@
             this.innerHTML = type === 'password' ? '<i class="ri-eye-off-line"></i>' : '<i class="ri-eye-line"></i>';
         });
 
-        // Toggle admin code field
+        // Toggle admin code field (ensure this function is called on role change if applicable)
         function toggleAdminCode() {
             const role = document.getElementById("role").value;
             const adminField = document.getElementById("adminCodeContainer");
+            // Use 'block' for display to make it visible, 'none' to hide it
             adminField.style.display = role === "admin" ? "block" : "none";
         }
 
-        // Form submission
+        // This is the SINGLE, CORRECTED Form Submission Handler
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const email = document.querySelector('input[type="email"]').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             const role = document.getElementById('role').value;
-            const adminCode = role === 'admin' ? document.getElementById('adminCode').value.trim() : null;
+            // Make sure to get adminCode if role is 'admin', otherwise it should be null or empty
+            const adminCode = (role === 'admin' && document.getElementById('adminCode'))
+                ? document.getElementById('adminCode').value.trim()
+                : null;
 
             try {
                 const response = await fetch('http://localhost:5000/api/auth/login', {
@@ -134,27 +138,47 @@
                     body: JSON.stringify({ email, password, role, adminCode })
                 });
 
-                const result = await response.json();
+                const result = await response.json(); // Parse the JSON response
 
-                if (response.ok) {
+                if (response.ok) { // Check if the HTTP status is success (2xx)
+                    // localStorage.setItem('token', result.token); // ✅ CORRECT: Save the token
+                    // localStorage.setItem('userRole', result.role); // Optional: Save user role 28/6/25 ******************************
+                    const { token, message, user } = result;
+
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('role', user.role);        // From nested user object
+                    localStorage.setItem('userId', user.userId);    // From nested user object
+                    localStorage.setItem('memberId', user.memberId);// From nested user object
+                    localStorage.setItem('userFullName', user.fullName); // From nested user object
+                    localStorage.setItem('email', user.email);      // From nested user object
+
+                    //*************************************************************************************************
                     showNotification("Login successful! Redirecting...", "success");
 
+                    // Redirect after a short delay to allow the notification to be seen
                     setTimeout(() => {
-                        if (result.role === 'ADMIN') {
-                            window.location.href = "adminD.html";
-                        } else {
+                        const userRole = result.user.role;
+
+                        if (userRole === 'ADMIN') { 
+                            window.location.href = "Admin-and-Member-Management.html";
+                        } else if (userRole === 'MEMBER') { 
                             window.location.href = "memberD.html";
+                        } else {
+                            window.location.href = "/"; 
                         }
-                    }, 1500);
+                    }, 1500); // 1.5 second delay
+
                 } else {
-                    showNotification((result.message || "Login failed."), "error");
+                    // Handle non-OK responses (e.g., 400, 401, 500)
+                    showNotification(result.message || "Login failed. Please check your credentials.", "error");
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showNotification("Server error, please try again later.", "error");
+                showNotification("An error occurred during login. Please try again later.", "error");
             }
         });
 
+        // Show notification function (make sure this function is defined within your script)
         function showNotification(message, type) {
             const notification = document.createElement("div");
             notification.className = `fixed top-4 right-4 px-6 py-3 rounded shadow-lg z-50 ${type === "error" ? "bg-red-500" : "bg-green-500"} text-white`;

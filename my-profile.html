@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Gym Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00FF00',
+            secondary: '#10b981'
+          },
+          borderRadius: {
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+</head>
+
+<body class="bg-black text-white font-['Montserrat']">
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-black text-white flex flex-col items-center py-6 px-4 border-r border-gray-700">
+      <div class="text-3xl text-primary mb-10 font-['Pacifico']">
+        FitCore
+      </div>
+      <nav class="flex flex-col space-y-4 w-full">
+        <a href="/memberD.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-dashboard-line mr-3"></i> Dashboard
+        </a>
+        <a href="/my-profile.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg">
+          <i class="ri-user-line mr-3"></i> My Profile
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-calendar-line mr-3"></i> Schedule
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-money-dollar-circle-line mr-3"></i> Payments
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">
+          <i class="ri-history-line mr-3"></i> Activity Log
+        </a>
+      </nav>
+      <div class="mt-auto w-full">
+        <a href="#" class="flex items-center px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg" id="sidebarLogoutBtn">
+          <i class="ri-logout-box-line mr-3"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-8">
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-white">My Profile</h1>
+        <div class="flex items-center space-x-4">
+            <span id="welcomeMessage" class="text-gray-300">Welcome, Loading Name!</span>
+            <div id="profileAvatar" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300">
+                <i class="ri-user-line text-lg"></i>
+            </div>
+        </div>
+      </header>
+
+      <div class="bg-gray-900 rounded shadow p-8 max-w-2xl mx-auto">
+        <h2 class="text-2xl font-semibold text-primary mb-6">Your Personal Information</h2>
+        <div class="space-y-4">
+          <p><strong>Full Name:</strong> <span id="profileFullName" class="text-gray-300">Loading...</span></p>
+          <p><strong>Email:</strong> <span id="profileEmail" class="text-gray-300">Loading...</span></p>
+          <p><strong>Phone:</strong> <span id="profilePhone" class="text-gray-300">Loading...</span></p>
+          <p><strong>Address:</strong> <span id="profileAddress" class="text-gray-300">Loading...</span></p>
+          <p><strong>Member ID:</strong> <span id="profileMemberId" class="text-gray-300">Loading...</span></p>
+          <p><strong>Membership Plan:</strong> <span id="profileMembershipPlan" class="text-gray-300">Loading...</span></p>
+          <p><strong>Membership Expires:</strong> <span id="profileMembershipExpiresAt" class="text-gray-300">Loading...</span></p>
+          <p><strong>Status:</strong> <span id="profileMembershipStatus" class="text-gray-300">Loading...</span></p>
+          <p><strong>Joined On:</strong> <span id="profileCreatedAt" class="text-gray-300">Loading...</span></p>
+        </div>
+        <div class="mt-8 text-center">
+            <button id="editProfileBtn" class="bg-primary hover:bg-green-600 text-black font-bold py-2 px-6 rounded-button transition duration-300">Edit Profile</button>
+            <button id="changePasswordBtn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 ml-4 rounded-button transition duration-300">Change Password</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:5000/api'; // Adjust if your backend is on a different port/URL
+
+    async function fetchUserProfile() {
+      const token = localStorage.getItem('token');
+      const welcomeMessageElement = document.getElementById('welcomeMessage');
+      const profileAvatarElement = document.getElementById('profileAvatar');
+
+      if (!token) {
+        console.error('No authentication token found. Please log in.');
+        if (welcomeMessageElement) welcomeMessageElement.textContent = 'Welcome, Guest!';
+        if (profileAvatarElement) {
+            profileAvatarElement.classList.remove('bg-gray-800', 'text-gray-300');
+            profileAvatarElement.classList.add('bg-gray-600', 'text-gray-400');
+        }
+        alert('You are not logged in. Redirecting to login page.');
+        window.location.href = 'sign_in.html'; // Adjust to your login page path
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/user/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Failed to fetch user data' }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const user = await response.json();
+        console.log("Fetched User Profile Data:", user);
+
+        // Populate header
+        if (welcomeMessageElement) welcomeMessageElement.textContent = `Welcome, ${user.fullName || 'Member'}!`;
+
+        // Populate profile details
+        document.getElementById('profileFullName').textContent = user.fullName || 'N/A';
+        document.getElementById('profileEmail').textContent = user.email || 'N/A';
+        document.getElementById('profilePhone').textContent = user.phone || 'N/A';
+        document.getElementById('profileAddress').textContent = user.address || 'Not Provided';
+        document.getElementById('profileMemberId').textContent = user.memberId || 'N/A';
+        document.getElementById('profileMembershipPlan').textContent = user.membershipPlan || 'None';
+        document.getElementById('profileMembershipStatus').textContent = user.membershipStatus || 'N/A';
+
+        if (user.membershipExpiresAt) {
+          const expiryDate = new Date(user.membershipExpiresAt);
+          document.getElementById('profileMembershipExpiresAt').textContent = expiryDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        } else {
+          document.getElementById('profileMembershipExpiresAt').textContent = 'N/A';
+        }
+
+        if (user.createdAt) {
+            const joinedDate = new Date(user.createdAt);
+            document.getElementById('profileCreatedAt').textContent = joinedDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } else {
+            document.getElementById('profileCreatedAt').textContent = 'N/A';
+        }
+
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        if (welcomeMessageElement) welcomeMessageElement.textContent = 'Welcome, Error!';
+        if (profileAvatarElement) {
+            profileAvatarElement.classList.remove('bg-gray-800', 'text-gray-300');
+            profileAvatarElement.classList.add('bg-red-800', 'text-red-400');
+        }
+        alert('Failed to load profile details. Please ensure you are logged in and try again.');
+      }
+    }
+
+    // Logout functionality
+    const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+    function handleLogout() {
+      localStorage.removeItem('token');
+      alert('You have been logged out.');
+      window.location.href = 'sign_in.html';
+    }
+    if (sidebarLogoutBtn) {
+        sidebarLogoutBtn.addEventListener('click', handleLogout);
+    }
+
+    // Placeholder for Edit Profile and Change Password buttons
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', function() {
+            alert('Edit Profile functionality coming soon!');
+        });
+    }
+
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function() {
+            alert('Change Password functionality coming soon!');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchUserProfile);
+
+    
+  </script>
+</body>
+
+</html>

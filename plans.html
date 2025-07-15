@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plans - Gym Management System</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+
+<body class="bg-black text-white font-['Inter']">
+  <div class="p-6">
+    <h1 class="text-2xl font-bold">Plans</h1>
+    <div id="current-plan" class="mt-4">Loading current plan...</div>
+    <div id="plan-options" class="flex flex-wrap gap-4 mt-4">
+      <!-- Plan options will be dynamically loaded here -->
+    </div>
+  </div>
+  <script>
+    // Fetch and display plans
+    async function loadPlans() {
+      const userId = 'CURRENT_USER_ID'; // Replace with actual user ID
+      const [plansRes, userPlanRes] = await Promise.all([
+        fetch('/api/member/plans'),
+        fetch(`/api/member/user-plan/${userId}`)
+      ]);
+      const plans = await plansRes.json();
+      const userPlan = await userPlanRes.json();
+      document.getElementById('current-plan').textContent = `Current Plan: ${userPlan.plan || '-'}`;
+      const options = document.getElementById('plan-options');
+      options.innerHTML = '';
+      plans.forEach(plan => {
+        options.innerHTML += `<div class='bg-gray-800 rounded p-4'><div class='font-bold mb-2'>${plan.name}</div><div>₹${plan.price}</div><button onclick="changePlan('${plan.name}')" class='mt-2 bg-primary text-black px-3 py-1 rounded'>Choose</button></div>`;
+      });
+    }
+    async function changePlan(planName) {
+      const userId = 'CURRENT_USER_ID'; // Replace with actual user ID
+      await fetch(`/api/member/user-plan/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: planName })
+      });
+      loadPlans();
+    }
+    loadPlans();
+  </script>
+</body>
+
+</html>
