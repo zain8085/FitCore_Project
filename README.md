@@ -1,3 +1,2 @@
-<<<<<<< HEAD
 # FitCore
-This is my full-stack project for gym management...
+This is my full-stack project for Gym Management
