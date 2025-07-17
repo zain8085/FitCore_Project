@@ -129,28 +129,31 @@
                                 </div>
 
                                 <!-- Password Field with Toggle -->
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                                    <input type="password" id="password"
-                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
-                                        required>
-                                    <button type="button" id="togglePassword"
-                                        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                </div>
+<div class="relative mb-4">
+    <label class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+    <input type="password" id="password"
+        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+        required minlength="8" placeholder="Enter at least 8 characters">
+    <button type="button" id="togglePassword"
+        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
+        <i class="ri-eye-line"></i>
+    </button>
+</div>
 
-                                <!-- Confirm Password Field with Toggle -->
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
-                                    <input type="password" id="confirmPassword"
-                                        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
-                                        required>
-                                    <button type="button" id="toggleConfirmPassword"
-                                        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                </div>
+<!-- Confirm Password Field with Toggle -->
+<div class="relative mb-4">
+    <label class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+    <input type="password" id="confirmPassword"
+        class="w-full bg-gray-800 border-none text-white px-4 py-3 pr-12 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+        required minlength="8" placeholder="Re-enter your password">
+    <button type="button" id="toggleConfirmPassword"
+        class="absolute top-10 right-4 text-gray-400 hover:text-primary transition-colors">
+        <i class="ri-eye-line"></i>
+    </button>
+</div>
+
+<!-- Optional: Simple Password Match Warning -->
+<p id="matchWarning" class="text-red-500 text-sm mt-1 hidden">Passwords do not match.</p>
 
                             </div>
 
@@ -360,6 +363,38 @@
                 notification.remove();
             }, 3000);
         }
+
+
+        
+    // Toggle password visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        const password = document.getElementById("password");
+        password.type = password.type === "password" ? "text" : "password";
+        this.querySelector("i").classList.toggle("ri-eye-line");
+        this.querySelector("i").classList.toggle("ri-eye-off-line");
+    });
+
+    document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+        const confirmPassword = document.getElementById("confirmPassword");
+        confirmPassword.type = confirmPassword.type === "password" ? "text" : "password";
+        this.querySelector("i").classList.toggle("ri-eye-line");
+        this.querySelector("i").classList.toggle("ri-eye-off-line");
+    });
+
+    // Optional: Show password mismatch warning
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirmPassword");
+    const warning = document.getElementById("matchWarning");
+
+    confirmInput.addEventListener("input", function () {
+        if (confirmInput.value !== passwordInput.value) {
+            warning.classList.remove("hidden");
+        } else {
+            warning.classList.add("hidden");
+        }
+    });
+
+
     </script>
 
 </body>
