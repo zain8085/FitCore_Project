@@ -1,2 +1,3 @@
+<<<<<<< HEAD
 # FitCore
-This is Final Year Project
+This is my full-stack project for gym management...
